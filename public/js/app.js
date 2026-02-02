@@ -222,43 +222,43 @@ function updateAllCurrencyDisplays() {
   renderPerformanceChart(demoPortfolioData);
 }
 
-// Stock icons mapping with brand colors
+// Stock icons mapping with brand colors - ALL images included
 const stockIcons = {
-  'AAPL': { icon: 'fab', class: 'fa-apple', color: '#555555', bg: '#f5f5f7' },
-  'GOOGL': { icon: 'fab', class: 'fa-google', color: '#4285F4', bg: '#e8f0fe' },
-  'GOOG': { icon: 'fab', class: 'fa-google', color: '#4285F4', bg: '#e8f0fe' },
-  'MSFT': { icon: 'fab', class: 'fa-microsoft', color: '#00A4EF', bg: '#e0f2ff' },
-  'AMZN': { icon: 'fab', class: 'fa-amazon', color: '#FF9900', bg: '#fff5e6' },
-  'TSLA': { icon: 'fas', class: 'fa-car', color: '#E31937', bg: '#fde8e8' },
-  'META': { icon: 'fab', class: 'fa-facebook', color: '#0668E1', bg: '#e6f0ff' },
-  'NVDA': { icon: 'fas', class: 'fa-microchip', color: '#76B900', bg: '#eaf5d8' },
-  'JPM': { icon: 'fas', class: 'fa-university', color: '#116D6E', bg: '#e0f2f1' },
+  'AAPL': { img: '/assets/images/AAPL.png', icon: 'fab', class: 'fa-apple', color: '#555555', bg: '#f5f5f7' },
+  'GOOGL': { img: '/assets/images/GOOGL.png', icon: 'fab', class: 'fa-google', color: '#4285F4', bg: '#e8f0fe' },
+  'GOOG': { img: '/assets/images/GOOGL.png', icon: 'fab', class: 'fa-google', color: '#4285F4', bg: '#e8f0fe' },
+  'MSFT': { img: '/assets/images/MSFT.png', icon: 'fab', class: 'fa-microsoft', color: '#00A4EF', bg: '#e0f2ff' },
+  'AMZN': { img: '/assets/images/AMZN.jpg', icon: 'fab', class: 'fa-amazon', color: '#FF9900', bg: '#fff5e6' },
+  'TSLA': { img: '/assets/images/TSLA.jpg', icon: 'fas', class: 'fa-car', color: '#E31937', bg: '#fde8e8' },
+  'META': { img: '/assets/images/META.jpg', icon: 'fab', class: 'fa-facebook', color: '#0668E1', bg: '#e6f0ff' },
+  'NVDA': { img: '/assets/images/NVDA.png', icon: 'fas', class: 'fa-microchip', color: '#76B900', bg: '#eaf5d8' },
+  'JPM': { img: '/assets/images/JPM.png', icon: 'fas', class: 'fa-university', color: '#116D6E', bg: '#e0f2f1' },
   'V': { icon: 'fas', class: 'fa-credit-card', color: '#1A1F71', bg: '#e6e6f0' },
   'JNJ': { icon: 'fas', class: 'fa-plus-square', color: '#007N1D', bg: '#e0f2e1' },
-  'WMT': { icon: 'fas', class: 'fa-shopping-cart', color: '#0071CE', bg: '#e0f0ff' },
+  'WMT': { img: '/assets/images/WMT.png', icon: 'fas', class: 'fa-shopping-cart', color: '#0071CE', bg: '#e0f0ff' },
   'PG': { icon: 'fas', class: 'fa-barcode', color: '#002D6D', bg: '#e6efff' },
   'MA': { icon: 'fas', class: 'fa-credit-card', color: '#EB001B', bg: '#fce8e8' },
   'UNH': { icon: 'fas', class: 'fa-hospital', color: '#116D6E', bg: '#e0f2f1' },
   'HD': { icon: 'fas', class: 'fa-home', color: '#F96302', bg: '#fff0e6' },
-  'DIS': { icon: 'fas', class: 'fa-film', color: '#113CCF', bg: '#e6eaff' },
-  'BAC': { icon: 'fas', class: 'fa-building', color: '#E31837', bg: '#fde8e8' },
-  'ADBE': { icon: 'fas', class: 'fa-pen-fancy', color: '#FF0000', bg: '#fde8e8' },
-  'CRM': { icon: 'fas', class: 'fa-cloud', color: '#00A1E0', bg: '#e0f2ff' },
-  'NFLX': { icon: 'fas', class: 'fa-tv', color: '#E50914', bg: '#fde8e8' },
+  'DIS': { img: '/assets/images/DIS.png', icon: 'fas', class: 'fa-film', color: '#113CCF', bg: '#e6eaff' },
+  'BAC': { img: '/assets/images/BAC.avif', icon: 'fas', class: 'fa-building', color: '#E31837', bg: '#fde8e8' },
+  'ADBE': { img: '/assets/images/ADBE', icon: 'fas', class: 'fa-pen-fancy', color: '#FF0000', bg: '#fde8e8' },
+  'CRM': { img: '/assets/images/CRM.png', icon: 'fas', class: 'fa-cloud', color: '#00A1E0', bg: '#e0f2ff' },
+  'NFLX': { img: '/assets/images/NFLX.png', icon: 'fas', class: 'fa-tv', color: '#E50914', bg: '#fde8e8' },
   'PYPL': { icon: 'fas', class: 'fa-wallet', color: '#003087', bg: '#e6efff' },
-  'INTC': { icon: 'fas', class: 'fa-microchip', color: '#0071C5', bg: '#e0f0ff' },
-  'AMD': { icon: 'fas', class: 'fa-microchip', color: '#ED1C24', bg: '#fde8e8' },
-  'COIN': { icon: 'fab', class: 'fa-bitcoin', color: '#0052FF', bg: '#e0f0ff' },
-  'BTC': { icon: 'fab', class: 'fa-bitcoin', color: '#F7931A', bg: '#fff5e6' },
-  'ETH': { icon: 'fab', class: 'fa-ethereum', color: '#627EEA', bg: '#e8edff' },
-  'SPY': { icon: 'fas', class: 'fa-chart-line', color: '#3b82f6', bg: '#dbeafe' },
+  'INTC': { img: '/assets/images/INTC.png', icon: 'fas', class: 'fa-microchip', color: '#0071C5', bg: '#e0f0ff' },
+  'AMD': { img: '/assets/images/AMD.png', icon: 'fas', class: 'fa-microchip', color: '#ED1C24', bg: '#fde8e8' },
+  'COIN': { img: '/assets/images/COIN.webp', icon: 'fab', class: 'fa-bitcoin', color: '#0052FF', bg: '#e0f0ff' },
+  'BTC': { img: '/assets/images/BTC.png', icon: 'fab', class: 'fa-bitcoin', color: '#F7931A', bg: '#fff5e6' },
+  'ETH': { img: '/assets/images/ETH.png', icon: 'fab', class: 'fa-ethereum', color: '#627EEA', bg: '#e8edff' },
+  'SPY': { img: '/assets/images/SPY.jpg', icon: 'fas', class: 'fa-chart-line', color: '#3b82f6', bg: '#dbeafe' },
   'QQQ': { icon: 'fas', class: 'fa-chart-line', color: '#8b5cf6', bg: '#ede9fe' },
-  'BND': { icon: 'fas', class: 'fa-university', color: '#10b981', bg: '#d1fae5' },
-  'VTI': { icon: 'fas', class: 'fa-chart-pie', color: '#3b82f6', bg: '#dbeafe' },
-  'SMCI': { icon: 'fas', class: 'fa-server', color: '#40BE46', bg: '#e0f5e0' },
-  'PLTR': { icon: 'fas', class: 'fa-chart-line', color: '#00A9CE', bg: '#e0f5ff' },
-  'SOFI': { icon: 'fas', class: 'fa-university', color: '#00D2BE', bg: '#e0faf8' },
-  'HOOD': { icon: 'fas', class: 'fa-chart-line', color: '#00C805', bg: '#e0f5e0' },
+  'BND': { img: '/assets/images/BND.png', icon: 'fas', class: 'fa-university', color: '#10b981', bg: '#d1fae5' },
+  'VTI': { img: '/assets/images/VTI.png', icon: 'fas', class: 'fa-chart-pie', color: '#3b82f6', bg: '#dbeafe' },
+  'SMCI': { img: '/assets/images/SMCI.png', icon: 'fas', class: 'fa-server', color: '#40BE46', bg: '#e0f5e0' },
+  'PLTR': { img: '/assets/images/PLTR.png', icon: 'fas', class: 'fa-chart-line', color: '#00A9CE', bg: '#e0f5ff' },
+  'SOFI': { img: '/assets/images/SOFI.png', icon: 'fas', class: 'fa-university', color: '#00D2BE', bg: '#e0faf8' },
+  'HOOD': { img: '/assets/images/HOOD.svg', icon: 'fas', class: 'fa-chart-line', color: '#00C805', bg: '#e0f5e0' },
   'DEFAULT': { icon: 'fas', class: 'fa-building', color: '#64748b', bg: '#f1f5f9' }
 };
 
@@ -495,10 +495,10 @@ async function initializeApp() {
     // Try to fetch live market data; fallback to demo if unavailable
     fetchAndApplyLiveData();
 
-    showToast('Portfolio loaded successfully', 'success');
+    console.log('✅ Portfolio loaded successfully');
   } catch (error) {
     console.error('Failed to initialize application:', error);
-    showToast('Failed to load portfolio data', 'error');
+    alert('Failed to load portfolio data. Please refresh the page.');
   }
 }
 
@@ -537,14 +537,44 @@ function updateYourInvestmentSummary() {
   const investmentValue = document.getElementById('yourInvestmentValue');
   const investmentChangeIndicator = document.getElementById('investmentChangeIndicator');
   const investmentChangePercent = document.getElementById('investmentChangePercent');
+  const investmentContainer = document.getElementById('yourInvestment');
 
   if (!investmentValue || !investmentChangeIndicator || !investmentChangePercent) return;
 
-  investmentValue.textContent = formatCurrency(summary.totalValue);
+  // Store old value for comparison
+  const oldValue = investmentValue.textContent;
+  const newValue = formatCurrency(summary.totalValue);
+
+  // Update the value
+  investmentValue.textContent = newValue;
 
   const isPositive = summary.totalGainLoss >= 0;
   investmentChangeIndicator.className = `gain-indicator ${isPositive ? 'up' : 'down'}`;
   investmentChangePercent.textContent = `${isPositive ? '+' : ''}${summary.gainLossPercent.toFixed(2)}%`;
+
+  // Add visual feedback if value changed
+  if (oldValue !== newValue && investmentContainer) {
+    // Add glowing animation
+    investmentContainer.style.transition = 'all 0.3s ease-out';
+    investmentContainer.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.6)';
+    investmentContainer.style.transform = 'scale(1.05)';
+
+    // Pulse the value
+    investmentValue.style.animation = 'valueChange 0.5s ease-out';
+
+    // Reset after animation
+    setTimeout(() => {
+      investmentContainer.style.boxShadow = '';
+      investmentContainer.style.transform = '';
+      investmentValue.style.animation = '';
+    }, 2000);
+  }
+
+  console.log('📊 Navbar Investment Updated:', {
+    value: summary.totalValue,
+    gainLoss: summary.totalGainLoss,
+    percentage: summary.gainLossPercent
+  });
 }
 
 // Top Gainers Suggestions (below nav bar)
@@ -554,27 +584,40 @@ function loadTopGainersSuggestions() {
 
   container.innerHTML = topGainersData.map(stock => {
     const iconInfo = getStockIcon(stock.symbol);
+    const inWatchlist = isInWatchlist(stock.symbol);
+    const watchlistIcon = inWatchlist ? 'fas fa-star' : 'far fa-star';
+    const watchlistColor = inWatchlist ? '#f59e0b' : '#94a3b8';
 
     return `
-      <div class="suggestion-card" onclick="quickTrade('${stock.symbol}', 'BUY')">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: ${iconInfo.bg}; display: flex; align-items: center; justify-content: center;">
-              <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 18px;"></i>
+      <div class="suggestion-card" style="position: relative; padding: 12px; display: flex; flex-direction: column;">
+        <div onclick="quickTrade('${stock.symbol}', 'BUY')" style="cursor: pointer; flex: 1;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              ${renderStockIconHtml(stock.symbol, iconInfo, 40)}
+              <div>
+                <div style="font-weight: 600; color: #1e293b;">${stock.symbol}</div>
+                <div style="font-size: 11px; color: #64748b; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${stock.name}</div>
+              </div>
             </div>
-            <div>
-              <div style="font-weight: 600; color: #1e293b;">${stock.symbol}</div>
-              <div style="font-size: 11px; color: #64748b; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${stock.name}</div>
+            <div class="gain-indicator up" style="font-size: 12px;">
+              <i class="fas fa-arrow-up"></i>
+              +${stock.changePercent.toFixed(2)}%
             </div>
           </div>
-          <div class="gain-indicator up" style="font-size: 12px;">
-            <i class="fas fa-arrow-up"></i>
-            +${stock.changePercent.toFixed(2)}%
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <span style="font-size: 14px; font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</span>
+            <span style="font-size: 11px; color: #64748b;">Vol: ${stock.volume}</span>
           </div>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-size: 14px; font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</span>
-          <span style="font-size: 11px; color: #64748b;">Vol: ${stock.volume}</span>
+        <div style="display: flex; justify-content: flex-end; padding-top: 8px; border-top: 1px solid #f1f5f9;">
+          <button onclick="event.stopPropagation(); toggleWatchlist('${stock.symbol}', '${stock.name}', ${stock.price})"
+                  style="background: ${inWatchlist ? 'rgba(245,158,11,0.1)' : 'rgba(148,163,184,0.1)'}; border: 1px solid ${inWatchlist ? '#f59e0b' : '#e2e8f0'}; border-radius: 6px; cursor: pointer; padding: 6px 12px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; font-size: 12px; font-weight: 600; color: ${inWatchlist ? '#f59e0b' : '#64748b'};"
+                  onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.1)';"
+                  onmouseout="this.style.transform=''; this.style.boxShadow='none';"
+                  title="${inWatchlist ? 'Remove from' : 'Add to'} watchlist">
+            <i class="${watchlistIcon}" style="color: ${watchlistColor}; font-size: 13px;"></i>
+            <span>${inWatchlist ? 'In Watchlist' : 'Add to Watchlist'}</span>
+          </button>
         </div>
       </div>
     `;
@@ -582,14 +625,13 @@ function loadTopGainersSuggestions() {
 }
 
 function refreshSuggestions() {
-  showToast('Refreshing stock suggestions...', 'info');
   topGainersData.forEach(stock => {
     const change = (Math.random() - 0.3) * 2;
     stock.changePercent = Math.max(-5, Math.min(10, stock.changePercent + change));
     stock.price = Math.max(0.01, stock.price * (1 + change / 100));
   });
   loadTopGainersSuggestions();
-  showToast('Stock suggestions refreshed', 'success');
+  console.log('✅ Stock suggestions refreshed');
 }
 
 // Top Market Movers (Gainers & Losers)
@@ -604,9 +646,7 @@ function loadTopMarketMovers() {
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(16,185,129,0.2);">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="width: 32px; height: 32px; border-radius: 8px; background: ${iconInfo.bg}; display: flex; align-items: center; justify-content: center;">
-            <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 14px;"></i>
-          </div>
+          ${renderStockIconHtml(stock.symbol, iconInfo, 32)}
           <div>
             <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${stock.symbol}</div>
             <div style="font-size: 10px; color: #64748b;">${stock.volume}</div>
@@ -626,9 +666,7 @@ function loadTopMarketMovers() {
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(239,68,68,0.2);">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="width: 32px; height: 32px; border-radius: 8px; background: ${iconInfo.bg}; display: flex; align-items: center; justify-content: center;">
-            <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 14px;"></i>
-          </div>
+          ${renderStockIconHtml(stock.symbol, iconInfo, 32)}
           <div>
             <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${stock.symbol}</div>
             <div style="font-size: 10px; color: #64748b;">${stock.volume}</div>
@@ -686,9 +724,7 @@ function loadStocksInNews() {
         <div style="background: linear-gradient(135deg, ${iconInfo.bg}, ${iconInfo.color}22); padding: 16px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <div style="width: 36px; height: 36px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center;">
-                <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 16px;"></i>
-              </div>
+              ${renderStockIconHtml(news.symbol, iconInfo, 36)}
               <div>
                 <div style="font-weight: 600; color: #1e293b;">${news.symbol}</div>
                 <div style="font-size: 11px; color: #64748b;">${news.name}</div>
@@ -723,7 +759,6 @@ function toggleNews(idx) {
 }
 
 function refreshNews() {
-  showToast('Refreshing news...', 'info');
   stocksInNewsData.forEach(news => {
     const sentimentChange = Math.random() > 0.5 ? 'positive' : 'negative';
     news.sentiment = sentimentChange;
@@ -731,7 +766,7 @@ function refreshNews() {
     news.time = `${randomHours} hour${randomHours > 1 ? 's' : ''} ago`;
   });
   loadStocksInNews();
-  showToast('News refreshed', 'success');
+  console.log('✅ News refreshed');
 }
 
 // Load Orders
@@ -745,9 +780,7 @@ function loadOrders() {
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
         <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="width: 40px; height: 40px; border-radius: 10px; background: ${iconInfo.bg}; display: flex; align-items: center; justify-content: center;">
-            <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 16px;"></i>
-          </div>
+          ${renderStockIconHtml(order.symbol, iconInfo, 40)}
           <div>
             <div style="font-weight: 600; color: #1e293b;">
               ${order.type} ${order.symbol}
@@ -779,29 +812,171 @@ function loadWatchlist() {
 
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="width: 40px; height: 40px; border-radius: 10px; background: ${iconInfo.bg}; display: flex; align-items: center; justify-content: center;">
-            <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 16px;"></i>
-          </div>
-          <div>
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          ${renderStockIconHtml(stock.symbol, iconInfo, 40)}
+          <div style="flex: 1;">
             <div style="font-weight: 600; color: #1e293b;">${stock.symbol}</div>
             <div style="font-size: 11px; color: #64748b;">${stock.name}</div>
           </div>
         </div>
-        <div style="text-align: right;">
-          <div style="font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</div>
-          <div class="gain-indicator ${isPositive ? 'up' : 'down'}" style="font-size: 11px;">
-            <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
-            ${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div style="text-align: right;">
+            <div style="font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</div>
+            <div class="gain-indicator ${isPositive ? 'up' : 'down'}" style="font-size: 11px;">
+              <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
+              ${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%
+            </div>
           </div>
+          <button onclick="removeFromWatchlist('${stock.symbol}')"
+                  style="background: rgba(239,68,68,0.1); border: none; color: #ef4444; cursor: pointer; padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px;"
+                  title="Remove from watchlist">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
       </div>
     `;
   }).join('');
 }
 
-function addToWatchlist() {
-  showToast('Watchlist feature - Add stock modal', 'info');
+// Watchlist management functions
+function addToWatchlist(symbol, name, price) {
+  // Check if already in watchlist
+  const exists = demoWatchlistData.find(s => s.symbol === symbol);
+  if (exists) {
+    return; // Already in watchlist, no action needed
+  }
+
+  // Add to watchlist
+  demoWatchlistData.push({
+    symbol: symbol,
+    name: name || symbol,
+    price: price || 0,
+    changePercent: 0
+  });
+
+  // Visual feedback
+  showWatchlistFeedback('ADDED', symbol, name);
+
+  loadWatchlist();
+  loadTopGainersSuggestions(); // Refresh to update star icons
+  renderMarketData(demoMarketData); // Refresh to update star icons
+
+  // Highlight watchlist panel
+  highlightWatchlistPanel();
+}
+
+function removeFromWatchlist(symbol) {
+  const index = demoWatchlistData.findIndex(s => s.symbol === symbol);
+  if (index !== -1) {
+    const removed = demoWatchlistData[index];
+    demoWatchlistData.splice(index, 1);
+
+    // Visual feedback
+    showWatchlistFeedback('REMOVED', symbol, removed.name);
+
+    loadWatchlist();
+    loadTopGainersSuggestions(); // Refresh to update star icons
+    renderMarketData(demoMarketData); // Refresh to update star icons
+  }
+}
+
+function toggleWatchlist(symbol, name, price) {
+  const exists = demoWatchlistData.find(s => s.symbol === symbol);
+  if (exists) {
+    removeFromWatchlist(symbol);
+  } else {
+    addToWatchlist(symbol, name, price);
+  }
+}
+
+function isInWatchlist(symbol) {
+  return demoWatchlistData.some(s => s.symbol === symbol);
+}
+
+// Show watchlist action feedback
+function showWatchlistFeedback(action, symbol, name) {
+  const color = action === 'ADDED' ? '#f59e0b' : '#64748b';
+  const bgColor = action === 'ADDED' ? 'rgba(245, 158, 11, 0.1)' : 'rgba(100, 116, 123, 0.1)';
+  const icon = action === 'ADDED' ? 'fa-star' : 'fa-star';
+  const iconStyle = action === 'ADDED' ? 'fas' : 'far';
+
+  // Create feedback element
+  let feedback = document.getElementById('watchlistFeedback');
+  if (!feedback) {
+    feedback = document.createElement('div');
+    feedback.id = 'watchlistFeedback';
+    feedback.style.cssText = `
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: white;
+      border: 2px solid ${color};
+      border-radius: 10px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 9999;
+      min-width: 280px;
+      animation: slideInRight 0.3s ease-out;
+    `;
+    document.body.appendChild(feedback);
+  }
+
+  feedback.style.borderColor = color;
+  feedback.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="width: 40px; height: 40px; background: ${bgColor}; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+        <i class="${iconStyle} ${icon}" style="color: ${color}; font-size: 20px;"></i>
+      </div>
+      <div style="flex: 1;">
+        <div style="font-size: 14px; font-weight: 600; color: #1e293b;">
+          ${action === 'ADDED' ? '⭐ Added to Watchlist' : '❌ Removed from Watchlist'}
+        </div>
+        <div style="font-size: 12px; color: #64748b;">
+          ${symbol} ${name ? '· ' + name : ''}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Add slide animation
+  if (!document.getElementById('watchlistAnimationStyles')) {
+    const style = document.createElement('style');
+    style.id = 'watchlistAnimationStyles';
+    style.textContent = `
+      @keyframes slideInRight {
+        from { right: -300px; opacity: 0; }
+        to { right: 20px; opacity: 1; }
+      }
+      @keyframes highlightPanel {
+        0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Auto-remove after 3 seconds
+  setTimeout(() => {
+    if (feedback && feedback.parentElement) {
+      feedback.style.transition = 'opacity 0.3s, right 0.3s';
+      feedback.style.opacity = '0';
+      feedback.style.right = '-300px';
+      setTimeout(() => feedback.remove(), 300);
+    }
+  }, 3000);
+}
+
+// Highlight watchlist panel
+function highlightWatchlistPanel() {
+  const watchlistCard = document.querySelector('#watchlistData')?.closest('.card');
+  if (watchlistCard) {
+    watchlistCard.style.animation = 'highlightPanel 1.5s ease-out';
+    setTimeout(() => watchlistCard.style.animation = '', 1500);
+
+    // Scroll to watchlist
+    watchlistCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
 }
 
 // Setup Event Listeners
@@ -836,24 +1011,39 @@ function renderMarketData(data) {
   container.innerHTML = data.map(stock => {
     const isPositive = stock.change >= 0;
     const iconInfo = getStockIcon(stock.symbol);
+    const inWatchlist = isInWatchlist(stock.symbol);
+    const watchlistIcon = inWatchlist ? 'fas fa-star' : 'far fa-star';
+    const watchlistColor = inWatchlist ? '#f59e0b' : '#94a3b8';
 
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="width: 44px; height: 44px; border-radius: 10px; background: ${iconInfo.bg}; display: flex; align-items: center; justify-content: center;">
-            <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 20px;"></i>
-          </div>
-          <div>
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+          ${renderStockIconHtml(stock.symbol, iconInfo, 44)}
+          <div style="flex: 1;">
             <div style="font-weight: 600; color: #1e293b;">${stock.symbol}</div>
             <div style="font-size: 12px; color: #64748b;">${stock.name}</div>
           </div>
         </div>
-        <div style="text-align: right;">
-          <div style="font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</div>
-          <div class="price-change ${isPositive ? 'stock-up' : 'stock-down'}" style="font-size: 13px;">
-            <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
-            <span>${isPositive ? '+' : ''}${stock.change.toFixed(2)} (${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%)</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="text-align: right; min-width: 120px;">
+            <div style="font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</div>
+            <div class="price-change ${isPositive ? 'stock-up' : 'stock-down'}" style="font-size: 13px;">
+              <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
+              <span>${isPositive ? '+' : ''}${stock.change.toFixed(2)} (${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%)</span>
+            </div>
           </div>
+          <button onclick="toggleWatchlist('${stock.symbol}', '${stock.name}', ${stock.price})"
+                  style="background: rgba(148,163,184,0.1); border: 1px solid #e2e8f0; cursor: pointer; padding: 8px 10px; border-radius: 6px; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                  onmouseover="this.style.background='rgba(245,158,11,0.1)'; this.style.borderColor='${inWatchlist ? '#f59e0b' : '#cbd5e1'}';"
+                  onmouseout="this.style.background='rgba(148,163,184,0.1)'; this.style.borderColor='#e2e8f0';"
+                  title="${inWatchlist ? 'Remove from' : 'Add to'} watchlist">
+            <i class="${watchlistIcon}" style="color: ${watchlistColor}; font-size: 16px;"></i>
+          </button>
+          <button onclick="quickTrade('${stock.symbol}', 'BUY')"
+                  style="background: rgba(16,185,129,0.1); border: none; color: #10b981; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;"
+                  title="Quick Buy">
+            <i class="fas fa-cart-plus"></i> Buy
+          </button>
         </div>
       </div>
     `;
@@ -861,7 +1051,6 @@ function renderMarketData(data) {
 }
 
 async function refreshMarketData() {
-  showToast('Refreshing market data...', 'info');
   demoMarketData.forEach(stock => {
     const change = (Math.random() - 0.5) * 2;
     stock.price = Math.max(0, stock.price + change);
@@ -869,7 +1058,7 @@ async function refreshMarketData() {
     stock.changePercent = (change / stock.price) * 100;
   });
   renderMarketData(demoMarketData);
-  showToast('Market data refreshed', 'success');
+  console.log('✅ Market data refreshed');
 }
 
 // Portfolio Table Functions
@@ -901,9 +1090,7 @@ function renderPortfolioTable(items) {
       <tr class="stock-table-row" style="border-bottom: 1px solid #e2e8f0;">
         <td style="padding: 16px 8px;">
           <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="width: 40px; height: 40px; border-radius: 10px; background: ${iconInfo.bg}; display: flex; align-items: center; justify-content: center;">
-              <i class="${iconInfo.icon} ${iconInfo.class}" style="color: ${iconInfo.color}; font-size: 18px;"></i>
-            </div>
+            ${renderStockIconHtml(item.tickerSymbol, iconInfo, 40)}
             <div>
               <div style="font-weight: 600; color: #1e293b;">${item.tickerSymbol}</div>
               <div style="font-size: 12px; color: #64748b;">${item.assetName}</div>
@@ -950,24 +1137,69 @@ function getStockIcon(symbol) {
   return stockIcons[symbol] || stockIcons['DEFAULT'];
 }
 
+// Helper: render stock icon preferring real logo images with fallback to Font Awesome icons
+function renderStockIconHtml(symbol, iconInfo, size = 40) {
+  const s = Number(size) || 40;
+  const img = iconInfo && iconInfo.img ? iconInfo.img : null;
+
+  if (img) {
+    // Try to use real logo image with error fallback to icon/initials
+    const bg = iconInfo.bg || '#f5f5f9';
+    const color = iconInfo.color || '#64748b';
+    const fallbackClass = iconInfo.class ? `${iconInfo.icon} ${iconInfo.class}` : '';
+    const fallbackContent = fallbackClass
+      ? `<i class="${fallbackClass}" style="font-size:${Math.floor(s/2)}px;"></i>`
+      : `<span style="font-size:${Math.floor(s/2.5)}px;font-weight:600;">${(symbol || '').slice(0, 3).toUpperCase()}</span>`;
+
+    return `<div style="width:${s}px;height:${s}px;border-radius:10px;background:${bg};display:flex;align-items:center;justify-content:center;color:${color};overflow:hidden;position:relative;">
+      <img src="${img}" alt="${symbol}"
+           style="width:85%;height:85%;object-fit:contain;display:block;"
+           onerror="this.style.display='none';this.parentElement.querySelector('.fallback-icon').style.display='flex';" />
+      <div class="fallback-icon" style="display:none;width:100%;height:100%;align-items:center;justify-content:center;position:absolute;top:0;left:0;">
+        ${fallbackContent}
+      </div>
+    </div>`;
+  }
+
+  // No image available - use Font Awesome icon or initials
+  const bg = (iconInfo && iconInfo.bg) ? iconInfo.bg : '#f1f5f9';
+  const color = (iconInfo && iconInfo.color) ? iconInfo.color : '#64748b';
+
+  if (iconInfo && iconInfo.class) {
+    return `<div style="width:${s}px;height:${s}px;border-radius:10px;background:${bg};display:flex;align-items:center;justify-content:center;color:${color};"><i class="${iconInfo.icon} ${iconInfo.class}" style="font-size:${Math.floor(s/2)}px;"></i></div>`;
+  }
+
+  const initials = (symbol || '').slice(0, 3).toUpperCase();
+  return `<div style="width:${s}px;height:${s}px;border-radius:10px;background:${bg};display:flex;align-items:center;justify-content:center;color:${color};font-weight:600;font-size:${Math.floor(s/2.5)}px;">${initials}</div>`;
+}
+
 // Summary Cards Functions
 function updateSummaryCards(summary) {
-  document.getElementById('totalValue').textContent = formatCurrency(summary.totalValue);
-  document.getElementById('totalInvestment').textContent = formatCurrency(summary.totalInvestment);
-
+  const totalValueEl = document.getElementById('totalValue');
+  const totalInvestmentEl = document.getElementById('totalInvestment');
   const gainLossElement = document.getElementById('totalGainLoss');
-  const isPositive = summary.totalGainLoss >= 0;
-  gainLossElement.textContent = (isPositive ? '+' : '') + formatCurrency(summary.totalGainLoss);
-  gainLossElement.style.color = isPositive ? '#10b981' : '#ef4444';
-
   const indicator = document.getElementById('totalGainIndicator');
-  const indicatorIcon = indicator.querySelector('i');
-  const indicatorText = indicator.querySelector('span');
-  indicator.className = `gain-indicator ${isPositive ? 'up' : 'down'}`;
-  indicatorIcon.className = `fas fa-caret-${isPositive ? 'up' : 'down'}`;
-  indicatorText.textContent = `${isPositive ? '+' : ''}${summary.gainLossPercent.toFixed(2)}%`;
+  const totalItemsEl = document.getElementById('totalItems');
 
-  document.getElementById('totalItems').textContent = summary.itemCount;
+  if (totalValueEl) totalValueEl.textContent = formatCurrency(summary.totalValue);
+  if (totalInvestmentEl) totalInvestmentEl.textContent = formatCurrency(summary.totalInvestment);
+
+  if (gainLossElement) {
+    const isPositive = summary.totalGainLoss >= 0;
+    gainLossElement.textContent = (isPositive ? '+' : '') + formatCurrency(summary.totalGainLoss);
+    gainLossElement.style.color = isPositive ? '#10b981' : '#ef4444';
+  }
+
+  if (indicator) {
+    const isPositive = summary.totalGainLoss >= 0;
+    indicator.className = `gain-indicator ${isPositive ? 'up' : 'down'}`;
+    const indicatorIcon = indicator.querySelector('i');
+    const indicatorText = indicator.querySelector('span');
+    if (indicatorIcon) indicatorIcon.className = `fas fa-arrow-${isPositive ? 'up' : 'down'}`;
+    if (indicatorText) indicatorText.textContent = `${isPositive ? '+' : ''}${summary.gainLossPercent.toFixed(2)}%`;
+  }
+
+  if (totalItemsEl) totalItemsEl.textContent = summary.itemCount;
 }
 
 // Chart Functions
@@ -1078,7 +1310,7 @@ function updateChartPeriod(period) {
   }));
 
   renderPerformanceChart(adjusted);
-  showToast(`Showing ${period} performance data`, 'info');
+  console.log(`Showing ${period} performance data`);
 }
 
 // Modal Functions
@@ -1131,19 +1363,18 @@ async function handleFormSubmit(event) {
       if (index !== -1) {
         demoPortfolioData[index] = { ...demoPortfolioData[index], ...positionData };
       }
-      showToast('Position updated successfully', 'success');
+      console.log('✅ Position updated successfully');
     } else {
       const newId = Math.max(...demoPortfolioData.map(p => p.id), 0) + 1;
       demoPortfolioData.push({ id: newId, ...positionData });
-      showToast('Position added successfully', 'success');
+      console.log('✅ Position added successfully');
     }
 
     closeModal();
-    loadDemoData();
-    updateYourInvestmentSummary();
+    refreshAllDisplays();
   } catch (error) {
     console.error('Error saving position:', error);
-    showToast('Failed to save position', 'error');
+    alert('Failed to save position. Please try again.');
   }
 }
 
@@ -1153,18 +1384,653 @@ function editPosition(id) {
   if (item) showEditModal(item);
 }
 
+// Global variables for quantity modal
+let quantityModalCallback = null;
+let quantityModalData = null;
+
+function showQuantityModal(symbol, action, stockInfo) {
+  console.log('🎯 showQuantityModal called:', symbol, action, stockInfo);
+
+  const modal = document.getElementById('quantityModal');
+  const title = document.getElementById('quantityModalTitle');
+  const symbolEl = document.getElementById('quantityStockSymbol');
+  const nameEl = document.getElementById('quantityStockName');
+  const priceEl = document.getElementById('quantityStockPrice');
+  const input = document.getElementById('quantityInput');
+  const maxInfo = document.getElementById('quantityMaxInfo');
+  const btn = document.getElementById('confirmQuantityBtn');
+
+  if (!modal) {
+    console.error('❌ Quantity modal not found!');
+    alert('Error: Quantity modal not found. Please refresh the page.');
+    return;
+  }
+
+  quantityModalData = { symbol, action, stockInfo };
+
+  // Set modal content
+  symbolEl.textContent = symbol;
+  nameEl.textContent = stockInfo.name || symbol;
+  priceEl.textContent = formatCurrency(stockInfo.price);
+
+  if (action === 'SELL') {
+    const position = demoPortfolioData.find(p => p.tickerSymbol === symbol);
+    if (position) {
+      title.textContent = `Sell ${symbol}`;
+      input.value = position.quantity;
+      input.max = position.quantity;
+      maxInfo.textContent = `You own ${position.quantity} shares`;
+      btn.style.background = '#ef4444';
+      btn.innerHTML = '<i class="fas fa-minus"></i> Sell';
+    }
+  } else {
+    title.textContent = `Buy ${symbol}`;
+    input.value = 10;
+    input.removeAttribute('max');
+    maxInfo.textContent = '';
+    btn.style.background = '#10b981';
+    btn.innerHTML = '<i class="fas fa-plus"></i> Buy';
+  }
+
+  updateQuantityTotal();
+  modal.style.display = 'flex';
+  input.focus();
+  input.select();
+
+  console.log('✅ Modal displayed');
+}
+
+function updateQuantityTotal() {
+  if (!quantityModalData) return;
+  const input = document.getElementById('quantityInput');
+  const totalEl = document.getElementById('quantityTotalCost');
+  const quantity = parseInt(input.value) || 0;
+  const total = quantity * quantityModalData.stockInfo.price;
+  totalEl.textContent = `Total: ${formatCurrency(total)}`;
+}
+
+function closeQuantityModal() {
+  document.getElementById('quantityModal').style.display = 'none';
+  quantityModalData = null;
+  quantityModalCallback = null;
+}
+
+function confirmQuantity() {
+  console.log('✅ confirmQuantity called', quantityModalData);
+
+  if (!quantityModalData) {
+    console.error('❌ quantityModalData is null!');
+    alert('Error: No stock data found. Please try again.');
+    closeQuantityModal();
+    return;
+  }
+
+  const input = document.getElementById('quantityInput');
+  const quantity = parseInt(input.value);
+
+  if (isNaN(quantity) || quantity <= 0) {
+    alert('❌ Please enter a valid quantity');
+    return;
+  }
+
+  if (quantityModalData.action === 'SELL') {
+    const position = demoPortfolioData.find(p => p.tickerSymbol === quantityModalData.symbol);
+    if (position && quantity > position.quantity) {
+      alert(`❌ You only have ${position.quantity} shares`);
+      return;
+    }
+  }
+
+  // Save data before closing modal (which sets it to null)
+  const savedSymbol = quantityModalData.symbol;
+  const savedAction = quantityModalData.action;
+  const savedStockInfo = quantityModalData.stockInfo;
+
+  closeQuantityModal();
+
+  // Execute trade with saved data
+  executeTradeWithQuantity(savedSymbol, savedAction, savedStockInfo, quantity);
+}
+
 function quickTrade(symbol, action) {
-  showToast(`${action} order for ${symbol} - Demo mode`, 'info');
+  console.log('🔔 quickTrade called:', symbol, action);
+
+  // Find stock info
+  let stockInfo = demoMarketData.find(s => s.symbol === symbol) ||
+                  demoWatchlistData.find(s => s.symbol === symbol) ||
+                  topGainersData.find(s => s.symbol === symbol) ||
+                  topLosersData.find(s => s.symbol === symbol);
+
+  if (!stockInfo) {
+    alert(`❌ Stock ${symbol} not found`);
+    return;
+  }
+
+  console.log('📊 Stock info found:', stockInfo);
+
+  // Show modal for quantity input
+  showQuantityModal(symbol, action, stockInfo);
+}
+
+function executeTradeWithQuantity(symbol, action, stockInfo, quantity) {
+  const price = stockInfo.price || 100;
+
+  // Calculate BEFORE values
+  const summaryBefore = calculatePortfolioSummary(demoPortfolioData);
+  const oldTotalValue = summaryBefore.totalValue;
+  const oldTotalInvestment = summaryBefore.totalInvestment;
+  const oldGainLoss = summaryBefore.totalGainLoss;
+
+  let oldQuantity = 0;
+  let newQuantity = 0;
+  let actionDetails = '';
+
+  if (action === 'BUY') {
+    const existingPosition = demoPortfolioData.find(p => p.tickerSymbol === symbol);
+
+    if (existingPosition) {
+      oldQuantity = existingPosition.quantity;
+      const totalShares = existingPosition.quantity + quantity;
+      const totalCost = (existingPosition.quantity * existingPosition.purchasePrice) + (quantity * price);
+      existingPosition.quantity = totalShares;
+      existingPosition.purchasePrice = totalCost / totalShares;
+      existingPosition.currentPrice = price;
+      newQuantity = totalShares;
+      actionDetails = `Quantity: ${oldQuantity} → ${newQuantity} shares`;
+    } else {
+      const newId = Math.max(...demoPortfolioData.map(p => p.id), 0) + 1;
+      const newPosition = {
+        id: newId,
+        tickerSymbol: symbol,
+        assetName: stockInfo.name || symbol,
+        assetType: 'STOCK',
+        quantity: quantity,
+        purchasePrice: price,
+        currentPrice: price,
+        purchaseDate: new Date().toISOString().split('T')[0]
+      };
+      demoPortfolioData.push(newPosition);
+      newQuantity = quantity;
+      actionDetails = `New position created · ${newQuantity} shares`;
+    }
+
+    demoOrdersData.unshift({
+      id: Math.max(...demoOrdersData.map(o => o.id), 0) + 1,
+      symbol: symbol,
+      type: 'BUY',
+      quantity: quantity,
+      price: price,
+      date: new Date().toISOString().split('T')[0],
+      status: 'Completed'
+    });
+
+  } else if (action === 'SELL') {
+    const position = demoPortfolioData.find(p => p.tickerSymbol === symbol);
+
+    if (!position) {
+      alert(`❌ You don't own ${symbol}`);
+      return;
+    }
+
+    if (position.quantity < quantity) {
+      alert(`❌ Insufficient shares. You only have ${position.quantity} shares of ${symbol}`);
+      return;
+    }
+
+    oldQuantity = position.quantity;
+    position.quantity -= quantity;
+    position.currentPrice = price;
+
+    if (position.quantity === 0) {
+      const index = demoPortfolioData.findIndex(p => p.id === position.id);
+      demoPortfolioData.splice(index, 1);
+      newQuantity = 0;
+      actionDetails = `Position closed · Sold all ${oldQuantity} shares`;
+    } else {
+      newQuantity = position.quantity;
+      actionDetails = `Quantity: ${oldQuantity} → ${newQuantity} shares`;
+    }
+
+    demoOrdersData.unshift({
+      id: Math.max(...demoOrdersData.map(o => o.id), 0) + 1,
+      symbol: symbol,
+      type: 'SELL',
+      quantity: quantity,
+      price: price,
+      date: new Date().toISOString().split('T')[0],
+      status: 'Completed'
+    });
+  }
+
+  // Calculate AFTER values
+  const summaryAfter = calculatePortfolioSummary(demoPortfolioData);
+  const newTotalValue = summaryAfter.totalValue;
+  const newTotalInvestment = summaryAfter.totalInvestment;
+  const newGainLoss = summaryAfter.totalGainLoss;
+
+  // Calculate changes
+  const valueChange = newTotalValue - oldTotalValue;
+  const investmentChange = newTotalInvestment - oldTotalInvestment;
+  const gainLossChange = newGainLoss - oldGainLoss;
+
+  // Log the changes for debugging
+  console.log('💰 Trade Executed:', {
+    action,
+    symbol,
+    quantity,
+    price,
+    before: {
+      value: oldTotalValue,
+      investment: oldTotalInvestment,
+      gainLoss: oldGainLoss,
+      items: summaryBefore.itemCount
+    },
+    after: {
+      value: newTotalValue,
+      investment: newTotalInvestment,
+      gainLoss: newGainLoss,
+      items: summaryAfter.itemCount
+    },
+    changes: {
+      value: valueChange,
+      investment: investmentChange,
+      gainLoss: gainLossChange
+    }
+  });
+
+  // Visual feedback with value changes
+  showActionFeedback(
+    action,
+    symbol,
+    quantity,
+    price,
+    actionDetails,
+    {
+      oldTotalValue,
+      newTotalValue,
+      valueChange,
+      oldTotalInvestment,
+      newTotalInvestment,
+      investmentChange,
+      oldGainLoss,
+      newGainLoss,
+      gainLossChange,
+      oldQuantity,
+      newQuantity
+    }
+  );
+
+  // Comprehensive refresh of ALL displays after trade
+  refreshAllDisplays();
+
+  // FORCE navbar update immediately with direct DOM manipulation
+  setTimeout(() => {
+    const navbarValue = document.getElementById('yourInvestmentValue');
+    const navbarContainer = document.getElementById('yourInvestment');
+    const navbarIndicator = document.getElementById('investmentChangeIndicator');
+    const navbarPercent = document.getElementById('investmentChangePercent');
+
+    if (navbarValue && navbarContainer) {
+      const freshSummary = calculatePortfolioSummary(demoPortfolioData);
+      navbarValue.textContent = formatCurrency(freshSummary.totalValue);
+
+      const isPositive = freshSummary.totalGainLoss >= 0;
+      if (navbarIndicator) {
+        navbarIndicator.className = `gain-indicator ${isPositive ? 'up' : 'down'}`;
+      }
+      if (navbarPercent) {
+        navbarPercent.textContent = `${isPositive ? '+' : ''}${freshSummary.gainLossPercent.toFixed(2)}%`;
+      }
+
+      // Visual feedback
+      navbarContainer.style.transition = 'all 0.5s ease-out';
+      navbarContainer.style.boxShadow = '0 0 30px rgba(59, 130, 246, 1)';
+      navbarContainer.style.transform = 'scale(1.1)';
+      navbarValue.style.fontSize = '16px';
+      navbarValue.style.color = '#3b82f6';
+
+      setTimeout(() => {
+        navbarContainer.style.boxShadow = '';
+        navbarContainer.style.transform = '';
+        navbarValue.style.fontSize = '';
+        navbarValue.style.color = '';
+      }, 2000);
+    }
+  }, 200);
+
+  // Highlight the changes
+  highlightUpdatedElements(symbol, action);
+}
+
+// Show action feedback in a prominent banner at top of page with value changes
+function showActionFeedback(action, symbol, quantity, price, details, changes) {
+  const color = action === 'BUY' ? '#10b981' : '#ef4444';
+  const bgColor = action === 'BUY' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
+  const icon = action === 'BUY' ? 'fa-arrow-up' : 'fa-arrow-down';
+
+  // Create or update feedback banner
+  let banner = document.getElementById('actionFeedbackBanner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'actionFeedbackBanner';
+    banner.style.cssText = `
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 2px solid ${color};
+      border-radius: 12px;
+      padding: 20px 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      z-index: 9999;
+      min-width: 500px;
+      max-width: 700px;
+      animation: slideDown 0.3s ease-out;
+    `;
+    document.body.appendChild(banner);
+  }
+
+  banner.style.borderColor = color;
+
+  // Format change indicators
+  const formatChange = (value) => {
+    const isPositive = value >= 0;
+    const sign = isPositive ? '+' : '';
+    return `<span style="color: ${isPositive ? '#10b981' : '#ef4444'}; font-weight: 600;">${sign}${formatCurrency(value)}</span>`;
+  };
+
+  banner.innerHTML = `
+    <div style="display: flex; align-items: flex-start; gap: 16px;">
+      <div style="width: 56px; height: 56px; background: ${bgColor}; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <i class="fas ${icon}" style="color: ${color}; font-size: 28px;"></i>
+      </div>
+      <div style="flex: 1;">
+        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+          <div>
+            <div style="font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+              ${action} ${symbol}
+            </div>
+            <div style="font-size: 14px; color: #64748b;">
+              ${quantity} shares @ ${formatCurrency(price)} · ${details}
+            </div>
+          </div>
+          <button onclick="document.getElementById('actionFeedbackBanner').remove()"
+                  style="background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 20px; padding: 4px; margin-left: 12px;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div style="background: #f8fafc; border-radius: 8px; padding: 12px; margin-top: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+            <div>
+              <div style="font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Portfolio Value</div>
+              <div style="font-size: 16px; font-weight: 700; color: #1e293b;">${formatCurrency(changes.newTotalValue)}</div>
+              <div style="font-size: 12px; margin-top: 2px;">${formatChange(changes.valueChange)}</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total Investment</div>
+              <div style="font-size: 16px; font-weight: 700; color: #1e293b;">${formatCurrency(changes.newTotalInvestment)}</div>
+              <div style="font-size: 12px; margin-top: 2px;">${formatChange(changes.investmentChange)}</div>
+            </div>
+            <div>
+              <div style="font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total Gain/Loss</div>
+              <div style="font-size: 16px; font-weight: 700; color: ${changes.newGainLoss >= 0 ? '#10b981' : '#ef4444'};">
+                ${formatCurrency(changes.newGainLoss)}
+              </div>
+              <div style="font-size: 12px; margin-top: 2px;">${formatChange(changes.gainLossChange)}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Add animation styles if not exists
+  if (!document.getElementById('actionAnimationStyles')) {
+    const style = document.createElement('style');
+    style.id = 'actionAnimationStyles';
+    style.textContent = `
+      @keyframes slideDown {
+        from { top: -100px; opacity: 0; }
+        to { top: 80px; opacity: 1; }
+      }
+      @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+      }
+      @keyframes highlight {
+        0% { background-color: rgba(250, 204, 21, 0.3); }
+        100% { background-color: transparent; }
+      }
+      @keyframes valueChange {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Animate value changes
+  setTimeout(() => {
+    const valueElements = banner.querySelectorAll('[style*="font-size: 16px"]');
+    valueElements.forEach(el => {
+      el.style.animation = 'valueChange 0.5s ease-out';
+    });
+  }, 100);
+
+  // Auto-remove after 8 seconds (longer to see the values)
+  setTimeout(() => {
+    if (banner && banner.parentElement) {
+      banner.style.transition = 'opacity 0.3s, top 0.3s';
+      banner.style.opacity = '0';
+      banner.style.top = '-100px';
+      setTimeout(() => banner.remove(), 300);
+    }
+  }, 8000);
+}
+
+// Highlight updated elements with animation
+function highlightUpdatedElements(symbol, action) {
+  // Highlight portfolio table row
+  setTimeout(() => {
+    const portfolioRows = document.querySelectorAll('.stock-table-row');
+    portfolioRows.forEach(row => {
+      const symbolText = row.querySelector('div[style*="font-weight: 600"]');
+      if (symbolText && symbolText.textContent === symbol) {
+        row.style.animation = 'highlight 2s ease-out';
+        row.style.border = '2px solid #fbbf24';
+        setTimeout(() => {
+          row.style.animation = '';
+          row.style.border = '';
+        }, 2000);
+      }
+    });
+
+    // Highlight navbar "Your Investment" section
+    const navbarInvestment = document.getElementById('yourInvestment');
+    if (navbarInvestment) {
+      navbarInvestment.style.transition = 'all 0.5s ease-out';
+      navbarInvestment.style.boxShadow = '0 0 25px rgba(59, 130, 246, 0.8)';
+      navbarInvestment.style.transform = 'scale(1.08)';
+      navbarInvestment.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15))';
+
+      // Add a visual "UPDATED" indicator
+      const updateBadge = document.createElement('div');
+      updateBadge.style.cssText = `
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 9px;
+        font-weight: 700;
+        z-index: 1000;
+        animation: pulse 1s ease-out infinite;
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+      `;
+      updateBadge.textContent = '✓ UPDATED';
+
+      navbarInvestment.style.position = 'relative';
+      navbarInvestment.appendChild(updateBadge);
+
+      setTimeout(() => {
+        navbarInvestment.style.boxShadow = '';
+        navbarInvestment.style.transform = '';
+        navbarInvestment.style.background = 'linear-gradient(135deg,#f8fafc,#e2e8f0)';
+        updateBadge.remove();
+      }, 3000);
+    }
+
+    // Highlight and animate summary cards with value changes
+    const summaryCards = document.querySelectorAll('.summary-card, .card');
+    summaryCards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.animation = 'pulse 1s ease-out';
+        card.style.transform = 'scale(1.02)';
+        card.style.transition = 'transform 0.3s ease-out';
+
+        // Add a "UPDATED" badge temporarily
+        const badge = document.createElement('div');
+        badge.style.cssText = `
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          background: #10b981;
+          color: white;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 10px;
+          font-weight: 700;
+          z-index: 10;
+          animation: pulse 1s ease-out;
+        `;
+        badge.textContent = 'UPDATED';
+
+        const parent = card.style.position === 'relative' ? card : (() => {
+          card.style.position = 'relative';
+          return card;
+        })();
+
+        parent.appendChild(badge);
+
+        setTimeout(() => {
+          card.style.animation = '';
+          card.style.transform = '';
+          badge.remove();
+        }, 2000);
+      }, index * 100);
+    });
+
+    // Flash the "Your Investment" summary with special attention
+    const investmentCard = document.querySelector('#yourInvestmentValue')?.closest('.card, .summary-card');
+    if (investmentCard) {
+      investmentCard.style.boxShadow = '0 0 20px rgba(16, 185, 129, 0.5)';
+      setTimeout(() => {
+        investmentCard.style.transition = 'box-shadow 1s ease-out';
+        investmentCard.style.boxShadow = '';
+      }, 2000);
+    }
+
+    // Scroll to portfolio section
+    const portfolioSection = document.getElementById('portfolio');
+    if (portfolioSection) {
+      portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, 100);
+}
+
+// Comprehensive refresh function - updates EVERYTHING dynamically
+function refreshAllDisplays() {
+  console.log('🔄 refreshAllDisplays called');
+
+  // Update portfolio displays with forced re-render
+  const summary = calculatePortfolioSummary(demoPortfolioData);
+
+  console.log('📊 Calculated summary:', summary);
+
+  // Force update summary cards with DOM manipulation
+  const totalValueEl = document.getElementById('totalValue');
+  const totalInvestmentEl = document.getElementById('totalInvestment');
+  const totalGainLossEl = document.getElementById('totalGainLoss');
+  const totalItemsEl = document.getElementById('totalItems');
+
+  if (totalValueEl) {
+    totalValueEl.textContent = formatCurrency(summary.totalValue);
+    console.log('✅ Updated totalValue:', totalValueEl.textContent);
+  }
+  if (totalInvestmentEl) {
+    totalInvestmentEl.textContent = formatCurrency(summary.totalInvestment);
+    console.log('✅ Updated totalInvestment:', totalInvestmentEl.textContent);
+  }
+  if (totalGainLossEl) {
+    totalGainLossEl.textContent = (summary.totalGainLoss >= 0 ? '+' : '') + formatCurrency(summary.totalGainLoss);
+    totalGainLossEl.style.color = summary.totalGainLoss >= 0 ? '#10b981' : '#ef4444';
+    console.log('✅ Updated totalGainLoss:', totalGainLossEl.textContent);
+  }
+  if (totalItemsEl) {
+    totalItemsEl.textContent = summary.itemCount;
+    console.log('✅ Updated totalItems:', totalItemsEl.textContent);
+  }
+
+  // Update the gain indicator with proper icon classes
+  const gainIndicator = document.getElementById('totalGainIndicator');
+  if (gainIndicator) {
+    const isPositive = summary.totalGainLoss >= 0;
+    gainIndicator.className = `gain-indicator ${isPositive ? 'up' : 'down'}`;
+    const icon = gainIndicator.querySelector('i');
+    const text = gainIndicator.querySelector('span');
+    if (icon) icon.className = `fas fa-arrow-${isPositive ? 'up' : 'down'}`;
+    if (text) text.textContent = `${isPositive ? '+' : ''}${summary.gainLossPercent.toFixed(2)}%`;
+    console.log('✅ Updated gainIndicator:', {
+      isPositive,
+      percentage: summary.gainLossPercent.toFixed(2) + '%',
+      gainLoss: summary.totalGainLoss
+    });
+  } else {
+    console.error('❌ totalGainIndicator element not found!');
+  }
+
+  // Force update portfolio table
+  renderPortfolioTable(demoPortfolioData);
+  console.log('✅ Portfolio table rendered');
+
+  // Update Your Investment header
+  updateYourInvestmentSummary();
+  console.log('✅ Navbar updated');
+
+  // Update charts - these are dynamic and reflect current data
+  renderAllocationChart(demoPortfolioData);
+  renderPerformanceChart(demoPortfolioData);
+  console.log('✅ Charts updated');
+
+  // Update all lists
+  loadOrders();
+  loadWatchlist();
+  loadTopGainersSuggestions();
+  loadTopMarketMovers();
+  renderMarketData(demoMarketData);
+  console.log('✅ All lists updated');
+
+  console.log('✅ All displays refreshed with current data', {
+    totalValue: summary.totalValue,
+    totalInvestment: summary.totalInvestment,
+    totalGainLoss: summary.totalGainLoss,
+    items: summary.itemCount
+  });
 }
 
 function deletePosition(id) {
   if (confirm('Are you sure you want to delete this position?')) {
     const index = demoPortfolioData.findIndex(p => p.id === id);
     if (index !== -1) {
+      const deleted = demoPortfolioData[index];
       demoPortfolioData.splice(index, 1);
-      showToast('Position deleted', 'success');
-      loadDemoData();
-      updateYourInvestmentSummary();
+      console.log(`✅ Position deleted: ${deleted.tickerSymbol}`);
+      refreshAllDisplays();
     }
   }
 }
@@ -1223,13 +2089,8 @@ function handleGlobalSearch(event) {
   // Show results in console for debugging
   console.log(`Search results for "${query}":`, uniqueResults);
 
-  // Show toast with results count
-  if (uniqueResults.length === 0) {
-    showToast(`No results found for "${query}"`, 'info');
-  } else {
-    showToast(`Found ${uniqueResults.length} result(s) for "${query}"`, 'success');
-    
-    // Auto-scroll to portfolio section if results found
+  // Auto-scroll to portfolio section if results found
+  if (uniqueResults.length > 0) {
     const portfolioSection = document.getElementById('portfolio');
     if (portfolioSection && filteredPortfolio.length > 0) {
       portfolioSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1269,7 +2130,6 @@ function toggleSidebar() {
 
 // Refresh All Data
 async function refreshAllData() {
-  showToast('Refreshing all data...', 'info');
   await refreshMarketData();
   refreshSuggestions();
   loadTopMarketMovers();
@@ -1279,24 +2139,13 @@ async function refreshAllData() {
   loadWatchlist();
   updateYourInvestmentSummary();
   loadDemoData();
-  showToast('All data refreshed', 'success');
+  console.log('✅ All data refreshed');
 }
 
-// Toast Notification
+// Toast Notification - DISABLED (removed per user request)
 function showToast(message, type = 'success') {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
-  const toastMessage = document.getElementById('toastMessage');
-  const toastIcon = document.getElementById('toastIcon');
-
-  toastMessage.textContent = message;
-
-  const iconClass = type === 'success' ? 'fa-check-circle text-green-400'
-                   : type === 'error' ? 'fa-exclamation-circle text-red-400'
-                   : 'fa-info-circle text-blue-400';
-  toastIcon.className = `fas ${iconClass}`;
-  toast.style.display = 'flex';
-  setTimeout(() => { toast.style.display = 'none'; }, 3000);
+  // Notifications removed - changes show directly on page
+  return;
 }
 
 // Make functions globally available
@@ -1306,7 +2155,22 @@ window.deletePosition = deletePosition;
 window.quickTrade = quickTrade;
 window.showAddModal = showAddModal;
 window.closeModal = closeModal;
+window.closeQuantityModal = closeQuantityModal;
+window.confirmQuantity = confirmQuantity;
+window.updateQuantityTotal = updateQuantityTotal;
 window.refreshMarketData = refreshMarketData;
+window.refreshAllData = refreshAllData;
+window.refreshAllDisplays = refreshAllDisplays;
+window.refreshSuggestions = refreshSuggestions;
+window.refreshNews = refreshNews;
+window.addToWatchlist = addToWatchlist;
+window.removeFromWatchlist = removeFromWatchlist;
+window.toggleWatchlist = toggleWatchlist;
+window.isInWatchlist = isInWatchlist;
+window.toggleSidebar = toggleSidebar;
+window.updateChartPeriod = updateChartPeriod;
+window.handleFormSubmit = handleFormSubmit;
+window.toggleNews = toggleNews;
 window.refreshAllData = refreshAllData;
 window.refreshSuggestions = refreshSuggestions;
 window.refreshNews = refreshNews;

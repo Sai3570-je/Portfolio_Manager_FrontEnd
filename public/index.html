@@ -289,6 +289,31 @@
     </footer>
   </div>
 
+  <!-- Quantity Modal -->
+  <div id="quantityModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:2500;">
+    <div style="background:#fff;border-radius:16px;padding:32px;width:100%;max-width:450px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+        <h2 id="quantityModalTitle" style="font-size:24px;font-weight:700;color:#1e293b;">Enter Quantity</h2>
+        <button onclick="closeQuantityModal()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:24px;"><i class="fas fa-times"></i></button>
+      </div>
+      <div style="margin-bottom:24px;">
+        <div id="quantityStockInfo" style="padding:16px;background:linear-gradient(135deg,#f8fafc,#e2e8f0);border-radius:12px;margin-bottom:16px;">
+          <div style="font-size:18px;font-weight:600;color:#1e293b;" id="quantityStockSymbol">AAPL</div>
+          <div style="font-size:14px;color:#64748b;" id="quantityStockName">Apple Inc.</div>
+          <div style="font-size:16px;font-weight:700;color:#3b82f6;margin-top:8px;" id="quantityStockPrice">$178.72</div>
+        </div>
+        <label style="display:block;font-size:14px;color:#64748b;margin-bottom:8px;font-weight:600;">Number of Shares</label>
+        <input type="number" id="quantityInput" min="1" value="10" style="width:100%;padding:14px;border:2px solid #3b82f6;border-radius:8px;font-size:18px;font-weight:600;text-align:center;" oninput="updateQuantityTotal()" />
+        <div id="quantityMaxInfo" style="font-size:13px;color:#64748b;margin-top:6px;"></div>
+        <div id="quantityTotalCost" style="font-size:16px;font-weight:700;color:#1e293b;margin-top:16px;padding:16px;background:#f8fafc;border-radius:8px;text-align:center;">Total: $0.00</div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;">
+        <button type="button" onclick="closeQuantityModal()" style="padding:12px 24px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;color:#64748b;cursor:pointer;font-size:14px;font-weight:600;">Cancel</button>
+        <button type="button" onclick="confirmQuantity()" id="confirmQuantityBtn" style="padding:12px 28px;border:none;border-radius:8px;background:#10b981;color:#fff;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;"><i class="fas fa-check"></i> Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <div id="positionModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:2000;">
     <div style="background:#fff;border-radius:16px;padding:24px;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
