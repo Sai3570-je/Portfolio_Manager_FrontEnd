@@ -247,14 +247,27 @@
             <h3 class="section-title"><i class="fas fa-newspaper text-orange-500 mr-2"></i>Stocks in News Today</h3>
             <button onclick="refreshNews()" style="background:none;border:none;color:#3b82f6;cursor:pointer;font-size:13px;"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
           </div>
-          <div id="stocksInNews" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;"></div>
+          <div id="stocksInNews" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;max-height:450px;overflow-y:auto;"></div>
         </div>
         <div class="stat-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
             <h3 class="section-title">Live Market Data</h3>
-            <button onclick="refreshMarketData()" style="background:none;border:none;color:#3b82f6;cursor:pointer;font-size:13px;"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <select id="marketFilter" onchange="filterMarketData()" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;font-size:11px;color:#64748b;">
+                <option value="">All Sectors</option>
+                <option value="Technology">Technology</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Financials">Financials</option>
+                <option value="Consumer">Consumer</option>
+                <option value="ETF">ETFs</option>
+              </select>
+              <button onclick="refreshMarketData()" style="background:none;border:none;color:#3b82f6;cursor:pointer;font-size:13px;"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+            </div>
           </div>
-          <div id="marketDataList" style="max-height:400px;overflow-y:auto;"></div>
+          <div style="margin-bottom:12px;">
+            <input type="text" id="marketSearch" placeholder="Search stocks..." onkeyup="searchMarketData()" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:13px;background:#f8fafc;" />
+          </div>
+          <div id="marketDataList" style="max-height:380px;overflow-y:auto;"></div>
         </div>
       </div>
 
