@@ -10,13 +10,21 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "Financial Portfolio Tracking Application with multi-language and multi-currency support",
-  "keywords": ["portfolio", "finance", "trading", "stocks", "multilingual"],
+  "description": "Financial Portfolio Tracking Application with multi-language, multi-currency support, and AI-powered chatbot using OpenAI",
+  "keywords": [
+    "portfolio",
+    "finance",
+    "trading",
+    "stocks",
+    "multilingual"
+  ],
   "dependencies": {
+    "@google/genai": "^1.39.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "node-fetch": "^3.3.2",
-    "nodemon": "^3.1.11"
+    "nodemon": "^3.1.11",
+    "openai": "^6.17.0"
   }
 }

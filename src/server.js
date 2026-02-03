@@ -12,6 +12,7 @@ const configRoutes = require('./routes/config');
 const translateRoutes = require('./routes/translate');
 const currencyRoutes = require('./routes/currency');
 const marketRoutes = require('./routes/market');
+const chatRoutes = require('./routes/chat');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -24,6 +25,7 @@ app.use('/api/config', configRoutes);
 app.use('/api/translate', translateRoutes);
 app.use('/api/currency', currencyRoutes);
 app.use('/api/market', marketRoutes);
+app.use('/api/chat', chatRoutes);
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '..', 'public')));
