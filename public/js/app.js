@@ -523,14 +523,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function initializeApp() {
   try {
-    // Load demo data
-    loadDemoData();
-    m1.getInstruments().then(data =>{
-      console.log(data);}).catch(error => {
+    // Fetch data from Spring Boot backend (localhost:8080)
+    await loadDataFromBackend();
 
-        console.error('Error fetching instruments:', error);
-      }
-      );
+    // Fetch portfolio data from API
+    await loadPortfolioFromAPI();
+
+    // Load demo data for other displays
+    loadDemoData();
 
     // Load all new features
     loadTopGainersSuggestions();
@@ -560,6 +560,93 @@ async function initializeApp() {
     console.error('Failed to initialize application:', error);
     alert('Failed to load portfolio data. Please refresh the page.');
   }
+}
+
+// Store backend data globally
+let backendInstruments = [];
+let backendSnapshots = [];
+
+// Load data from Spring Boot backend (localhost:8080)
+async function loadDataFromBackend() {
+  try {
+    console.log('🚀 Loading data from Spring Boot backend...');
+
+    // Fetch instruments
+    try {
+      backendInstruments = await portfolioAPI.fetchInstruments();
+      console.log('✅ Instruments loaded:', backendInstruments.length, 'items');
+    } catch (err) {
+      console.warn('⚠️ Could not fetch instruments:', err.message);
+    }
+
+    // Fetch snapshots
+    try {
+      backendSnapshots = await portfolioAPI.fetchSnapshots();
+      console.log('✅ Snapshots loaded:', backendSnapshots.length, 'items');
+    } catch (err) {
+      console.warn('⚠️ Could not fetch snapshots:', err.message);
+    }
+
+    // If we got instruments, update the market data display
+    if (backendInstruments.length > 0) {
+      updateMarketDataFromBackend(backendInstruments);
+    }
+
+  } catch (error) {
+    console.warn('⚠️ Backend not available, using demo data:', error.message);
+  }
+}
+
+// Update market data display with backend instruments
+function updateMarketDataFromBackend(instruments) {
+  // Map backend instruments to the format expected by the UI
+  const mappedData = instruments.map(inst => ({
+    symbol: inst.tickerSymbol || inst.symbol || inst.ticker,
+    name: inst.assetName || inst.name || inst.companyName,
+    price: inst.currentPrice || inst.price || 0,
+    change: inst.change || 0,
+    changePercent: inst.changePercent || inst.percentChange || 0,
+    volume: inst.volume || 'N/A',
+    sector: inst.sector || inst.assetType || 'Unknown',
+    marketCap: inst.marketCap || 'N/A'
+  }));
+
+  // Update demoMarketData with backend data
+  if (mappedData.length > 0) {
+    console.log('📊 Updating market data with backend instruments');
+    // Merge or replace demo data
+    mappedData.forEach(item => {
+      const existingIndex = demoMarketData.findIndex(d => d.symbol === item.symbol);
+      if (existingIndex >= 0) {
+        demoMarketData[existingIndex] = { ...demoMarketData[existingIndex], ...item };
+      } else {
+        demoMarketData.push(item);
+      }
+    });
+  }
+}
+
+// Load portfolio from API
+async function loadPortfolioFromAPI() {
+  try {
+    const data = await portfolioAPI.fetchPortfolio();
+    // Update demoPortfolioData with API data
+    demoPortfolioData.length = 0; // Clear existing data
+    demoPortfolioData.push(...data);
+    console.log('✅ Portfolio data loaded from API:', data.length, 'items');
+  } catch (error) {
+    console.warn('Could not fetch portfolio from API, using demo data:', error);
+  }
+}
+
+// Refresh all displays after CRUD operations
+function refreshAllDisplays() {
+  const summary = calculatePortfolioSummary(demoPortfolioData);
+  updateSummaryCards(summary);
+  renderPortfolioTable(demoPortfolioData);
+  renderAllocationChart(demoPortfolioData);
+  renderPerformanceChart(demoPortfolioData);
+  updateYourInvestmentSummary();
 }
 
 function loadDemoData() {
@@ -1389,6 +1476,9 @@ function renderPortfolioTable(items) {
             <button onclick="editPosition(${item.id})" style="background: none; border: none; color: #3b82f6; cursor: pointer; padding: 6px;" title="Edit">
               <i class="fas fa-edit"></i>
             </button>
+            <button onclick="deletePosition(${item.id})" style="background: none; border: none; color: #ef4444; cursor: pointer; padding: 6px;" title="Delete">
+              <i class="fas fa-trash"></i>
+            </button>
             <button onclick="quickTrade('${item.tickerSymbol}', 'BUY')" style="background: rgba(16,185,129,0.1); border: none; color: #10b981; cursor: pointer; padding: 6px 10px; border-radius: 6px;" title="Buy">
               <i class="fas fa-plus"></i>
             </button>
@@ -1628,14 +1718,17 @@ async function handleFormSubmit(event) {
 
   try {
     if (positionId) {
+      // Update existing position via API
+      const updated = await portfolioAPI.updatePosition(parseInt(positionId), positionData);
       const index = demoPortfolioData.findIndex(p => p.id === parseInt(positionId));
       if (index !== -1) {
-        demoPortfolioData[index] = { ...demoPortfolioData[index], ...positionData };
+        demoPortfolioData[index] = updated;
       }
       console.log('✅ Position updated successfully');
     } else {
-      const newId = Math.max(...demoPortfolioData.map(p => p.id), 0) + 1;
-      demoPortfolioData.push({ id: newId, ...positionData });
+      // Create new position via API
+      const created = await portfolioAPI.createPosition(positionData);
+      demoPortfolioData.push(created);
       console.log('✅ Position added successfully');
     }
 
@@ -1651,6 +1744,26 @@ async function handleFormSubmit(event) {
 function editPosition(id) {
   const item = demoPortfolioData.find(p => p.id === id);
   if (item) showEditModal(item);
+}
+
+// Delete position via API
+async function deletePosition(id) {
+  if (!confirm('Are you sure you want to delete this position?')) {
+    return;
+  }
+
+  try {
+    await portfolioAPI.deletePosition(id);
+    const index = demoPortfolioData.findIndex(p => p.id === id);
+    if (index !== -1) {
+      demoPortfolioData.splice(index, 1);
+    }
+    console.log('✅ Position deleted successfully');
+    refreshAllDisplays();
+  } catch (error) {
+    console.error('Error deleting position:', error);
+    alert('Failed to delete position. Please try again.');
+  }
 }
 
 // Global variables for quantity modal
