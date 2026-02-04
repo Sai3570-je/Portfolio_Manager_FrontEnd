@@ -643,24 +643,41 @@ async function loadDataFromBackend() {
 
 // Update market data from backend market quotes
 function updateMarketDataFromQuotes(quotes) {
-  console.log('📊 Updating market data with backend quotes');
+  console.log('📊 Updating market data with backend quotes:', quotes.length, 'items');
+
   quotes.forEach(quote => {
-    const symbol = quote.symbol || quote.instrumentSymbol;
+    const symbol = quote.symbol || quote.instrumentSymbol || quote.ticker;
+    if (!symbol) return; // Skip if no symbol
+
     const existingIndex = demoMarketData.findIndex(d => d.symbol === symbol);
+
+    // Extract price with multiple fallbacks
+    const price = quote.price || quote.currentPrice || quote.lastPrice || quote.regularMarketPrice || 0;
+    const prevPrice = quote.previousClose || quote.openPrice || price;
+    const change = quote.change || quote.priceChange || quote.regularMarketChange || (price - prevPrice) || 0;
+    const changePercent = quote.changePercent || quote.percentChange || quote.regularMarketChangePercent ||
+                          (prevPrice > 0 ? ((price - prevPrice) / prevPrice * 100) : 0);
 
     const mappedQuote = {
       symbol: symbol,
-      name: quote.name || quote.instrumentName || symbol,
-      price: quote.price || quote.currentPrice || 0,
-      change: quote.change || quote.priceChange || 0,
-      changePercent: quote.changePercent || quote.percentChange || 0,
-      volume: quote.volume || 'N/A',
-      sector: quote.sector || 'Unknown',
-      marketCap: quote.marketCap || 'N/A'
+      name: quote.name || quote.instrumentName || quote.shortName || quote.longName || symbol,
+      price: price,
+      change: change,
+      changePercent: changePercent,
+      volume: quote.volume || quote.regularMarketVolume || 'N/A',
+      sector: quote.sector || quote.industry || 'Unknown',
+      marketCap: quote.marketCap || quote.marketCapitalization || 'N/A'
     };
 
+    console.log('📋 Mapped quote:', symbol, '- Price:', price, '- Change:', changePercent.toFixed(2) + '%');
+
     if (existingIndex >= 0) {
-      demoMarketData[existingIndex] = { ...demoMarketData[existingIndex], ...mappedQuote };
+      // Merge, keeping demo values as fallback for missing data
+      demoMarketData[existingIndex] = {
+        ...demoMarketData[existingIndex],
+        ...mappedQuote,
+        price: mappedQuote.price || demoMarketData[existingIndex].price
+      };
     } else {
       demoMarketData.push(mappedQuote);
     }
@@ -670,25 +687,46 @@ function updateMarketDataFromQuotes(quotes) {
 // Update market data display with backend instruments
 function updateMarketDataFromBackend(instruments) {
   // Map backend instruments to the format expected by the UI
-  const mappedData = instruments.map(inst => ({
-    symbol: inst.tickerSymbol || inst.symbol || inst.ticker,
-    name: inst.assetName || inst.name || inst.companyName,
-    price: inst.currentPrice || inst.price || 0,
-    change: inst.change || 0,
-    changePercent: inst.changePercent || inst.percentChange || 0,
-    volume: inst.volume || 'N/A',
-    sector: inst.sector || inst.assetType || 'Unknown',
-    marketCap: inst.marketCap || 'N/A'
-  }));
+  const mappedData = instruments.map(inst => {
+    // Extract price - try multiple possible field names
+    const price = inst.currentPrice || inst.price || inst.lastPrice || inst.marketPrice || 0;
+
+    // Calculate change if not provided
+    const prevPrice = inst.previousClose || inst.openPrice || price;
+    const change = inst.change || inst.priceChange || (price - prevPrice) || 0;
+    const changePercent = inst.changePercent || inst.percentChange ||
+                          (prevPrice > 0 ? ((price - prevPrice) / prevPrice * 100) : 0);
+
+    return {
+      symbol: inst.tickerSymbol || inst.symbol || inst.ticker || 'N/A',
+      name: inst.assetName || inst.name || inst.companyName || inst.description || 'Unknown',
+      price: price,
+      change: change,
+      changePercent: changePercent,
+      volume: inst.volume || inst.avgVolume || 'N/A',
+      sector: inst.sector || inst.assetType || inst.category || 'Unknown',
+      marketCap: inst.marketCap || inst.marketCapitalization || 'N/A'
+    };
+  });
 
   // Update demoMarketData with backend data
   if (mappedData.length > 0) {
-    console.log('📊 Updating market data with backend instruments');
+    console.log('📊 Updating market data with backend instruments:', mappedData.length, 'items');
+    console.log('📋 Sample mapped instrument:', mappedData[0]);
+
     // Merge or replace demo data
     mappedData.forEach(item => {
+      if (!item.symbol || item.symbol === 'N/A') return; // Skip invalid items
+
       const existingIndex = demoMarketData.findIndex(d => d.symbol === item.symbol);
       if (existingIndex >= 0) {
-        demoMarketData[existingIndex] = { ...demoMarketData[existingIndex], ...item };
+        // Merge with existing data, keeping demo values as fallback
+        demoMarketData[existingIndex] = {
+          ...demoMarketData[existingIndex],
+          ...item,
+          // Ensure price is not 0 if we have a demo price
+          price: item.price || demoMarketData[existingIndex].price
+        };
       } else {
         demoMarketData.push(item);
       }
@@ -745,24 +783,87 @@ async function loadPortfolioFromAPI() {
   }
 }
 
+// Helper function to get price from available data sources
+function getMarketPriceForSymbol(symbol) {
+  if (!symbol || symbol === 'N/A') return { price: 0, changePercent: 0 };
+
+  // Try demoMarketData first
+  const marketItem = demoMarketData.find(m => m.symbol === symbol);
+  if (marketItem && marketItem.price > 0) {
+    return { price: marketItem.price, changePercent: marketItem.changePercent || 0 };
+  }
+
+  // Try backendInstruments
+  const instrument = backendInstruments.find(i =>
+    (i.symbol === symbol) || (i.tickerSymbol === symbol) || (i.ticker === symbol)
+  );
+  if (instrument) {
+    const price = instrument.currentPrice || instrument.price || instrument.lastPrice || 0;
+    if (price > 0) {
+      return { price: price, changePercent: instrument.changePercent || 0 };
+    }
+  }
+
+  // Try topGainersData
+  const gainer = topGainersData.find(g => g.symbol === symbol);
+  if (gainer && gainer.price > 0) {
+    return { price: gainer.price, changePercent: gainer.changePercent || 0 };
+  }
+
+  // Try topLosersData
+  const loser = topLosersData.find(l => l.symbol === symbol);
+  if (loser && loser.price > 0) {
+    return { price: loser.price, changePercent: loser.changePercent || 0 };
+  }
+
+  // Try demoPortfolioData
+  const portfolio = demoPortfolioData.find(p => p.tickerSymbol === symbol);
+  if (portfolio && portfolio.currentPrice > 0) {
+    return { price: portfolio.currentPrice, changePercent: 0 };
+  }
+
+  return { price: 0, changePercent: 0 };
+}
+
 // Load orders from backend API
 async function loadOrdersFromBackend() {
   try {
     const data = await portfolioAPI.fetchOrders();
+    console.log('📋 Raw orders from backend:', JSON.stringify(data).substring(0, 500));
+
     if (Array.isArray(data) && data.length > 0) {
-      // Map data to ensure correct format
-      const mappedData = data.map(order => ({
-        id: order.id,
-        symbol: order.symbol || order.instrumentSymbol || 'N/A',
-        type: order.type || order.orderType || 'BUY',
-        quantity: order.quantity || 0,
-        price: order.price || order.orderPrice || 0,
-        date: order.date || order.orderDate || new Date().toISOString().split('T')[0],
-        status: order.status || 'Pending'
-      }));
+      // Map data to ensure correct format - handle nested instrument objects
+      const mappedData = data.map(order => {
+        // Handle nested instrument object if present
+        const instrument = order.instrument || {};
+        const symbol = order.symbol || order.instrumentSymbol || instrument.symbol || instrument.tickerSymbol || 'N/A';
+
+        // Get price from order or look up from market data
+        let price = Number(order.price) || Number(order.orderPrice) || Number(order.limitPrice) ||
+                    Number(order.executedPrice) || Number(order.avgPrice) || Number(order.filledPrice) ||
+                    Number(instrument.currentPrice) || Number(instrument.price) || 0;
+
+        // If still 0, enrich from market data
+        if (price === 0 || price < 1) {
+          const marketData = getMarketPriceForSymbol(symbol);
+          price = marketData.price;
+        }
+
+        return {
+          id: order.id,
+          symbol: symbol,
+          type: (order.type || order.orderType || order.side || 'BUY').toUpperCase(),
+          quantity: Number(order.quantity) || Number(order.shares) || Number(order.amount) || 0,
+          price: price,
+          date: order.date || order.orderDate || order.createdAt?.split('T')[0] || order.timestamp?.split('T')[0] || new Date().toISOString().split('T')[0],
+          status: order.status || order.orderStatus || 'Pending'
+        };
+      });
+
       demoOrdersData.length = 0;
       demoOrdersData.push(...mappedData);
       console.log('✅ Orders data loaded from backend:', mappedData.length, 'items');
+      console.log('📋 Orders mapped sample:', mappedData[0]);
     }
   } catch (error) {
     console.warn('Could not fetch orders from backend:', error);
@@ -773,18 +874,44 @@ async function loadOrdersFromBackend() {
 async function loadWatchlistFromBackend() {
   try {
     const data = await portfolioAPI.fetchWatchlist();
+    console.log('📋 Raw watchlist from backend:', JSON.stringify(data).substring(0, 500));
+
     if (Array.isArray(data) && data.length > 0) {
-      // Map data to ensure correct format
-      const mappedData = data.map(item => ({
-        id: item.id,
-        symbol: item.symbol || item.instrumentSymbol || 'N/A',
-        name: item.name || item.instrumentName || 'Unknown',
-        price: item.price || item.currentPrice || 0,
-        changePercent: item.changePercent || item.percentChange || 0
-      }));
+      // Map data to ensure correct format - handle nested instrument objects
+      const mappedData = data.map(item => {
+        // Handle nested instrument object if present
+        const instrument = item.instrument || {};
+        const symbol = item.symbol || item.instrumentSymbol || instrument.symbol || instrument.tickerSymbol || 'N/A';
+        const name = item.name || item.instrumentName || instrument.name || instrument.assetName || symbol;
+
+        // Get price from item or look up from market data
+        let price = Number(item.price) || Number(item.currentPrice) ||
+                    Number(instrument.currentPrice) || Number(instrument.price) ||
+                    Number(instrument.lastPrice) || 0;
+        let changePercent = Number(item.changePercent) || Number(item.percentChange) ||
+                            Number(instrument.changePercent) || Number(instrument.percentChange) || 0;
+
+        // If price is 0, enrich from market data
+        if (price === 0 || price < 0.01) {
+          const marketData = getMarketPriceForSymbol(symbol);
+          price = marketData.price;
+          changePercent = marketData.changePercent;
+        }
+
+        return {
+          id: item.id,
+          instrumentId: item.instrumentId || instrument.id,
+          symbol: symbol,
+          name: name,
+          price: price,
+          changePercent: changePercent
+        };
+      });
+
       demoWatchlistData.length = 0;
       demoWatchlistData.push(...mappedData);
       console.log('✅ Watchlist data loaded from backend:', mappedData.length, 'items');
+      console.log('📋 Watchlist mapped sample:', mappedData[0]);
     }
   } catch (error) {
     console.warn('Could not fetch watchlist from backend:', error);
@@ -869,7 +996,7 @@ function updateYourInvestmentSummary() {
   if (oldValue !== newValue && investmentContainer) {
     // Add glowing animation
     investmentContainer.style.transition = 'all 0.3s ease-out';
-    investmentContainer.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.6)';
+    investmentContainer.style.boxShadow = '0 0 20px rgba(59,130,246,0.6)';
     investmentContainer.style.transform = 'scale(1.05)';
 
     // Pulse the value
@@ -1188,9 +1315,15 @@ function loadOrders() {
   container.innerHTML = demoOrdersData.slice(0, 5).map(order => {
     // Handle different data formats from backend
     const symbol = order.symbol || order.instrumentSymbol || 'N/A';
-    const type = order.type || order.orderType || 'BUY';
-    const quantity = order.quantity || 0;
-    const price = order.price || order.orderPrice || 0;
+    const type = (order.type || order.orderType || 'BUY').toUpperCase();
+    const quantity = Number(order.quantity) || 0;
+
+    // Get price with fallback to market data
+    let price = Number(order.price) || Number(order.orderPrice) || 0;
+    if (price === 0 || price < 1) {
+      const marketData = getMarketPriceForSymbol(symbol);
+      price = marketData.price;
+    }
     const date = order.date || order.orderDate || 'N/A';
 
     const isBuy = type === 'BUY';
@@ -1241,8 +1374,17 @@ function loadWatchlist() {
     // Handle different data formats from backend
     const symbol = stock.symbol || stock.instrumentSymbol || 'N/A';
     const name = stock.name || stock.instrumentName || symbol;
-    const price = stock.price || stock.currentPrice || 0;
-    const changePercent = stock.changePercent ?? stock.percentChange ?? 0;
+
+    // Get price with fallback to market data
+    let price = Number(stock.price) || Number(stock.currentPrice) || 0;
+    let changePercent = Number(stock.changePercent) ?? Number(stock.percentChange) ?? 0;
+
+    // If price is 0 or very low, enrich from market data
+    if (price === 0 || price < 0.01) {
+      const marketData = getMarketPriceForSymbol(symbol);
+      price = marketData.price;
+      changePercent = marketData.changePercent;
+    }
 
     const iconInfo = getStockIcon(symbol);
     const isPositive = changePercent >= 0;
@@ -1280,11 +1422,14 @@ function addToWatchlist(symbol, name, price) {
   // If called from news, get stock data from news or find from existing data
   if (!name || !price) {
     const newsStock = stocksInNewsData.find(n => n.symbol === symbol);
-    const portfolioStock = demoPortfolioData.find(s => s.symbol === symbol);
+    const portfolioStock = demoPortfolioData.find(s => s.tickerSymbol === symbol);
     const marketStock = demoMarketData.find(s => s.symbol === symbol);
 
-    name = newsStock?.name || portfolioStock?.name || marketStock?.name || `${symbol} Inc.`;
-    price = portfolioStock?.price || marketStock?.price || 150; // Default price if not found
+    name = newsStock?.name || portfolioStock?.assetName || marketStock?.name || `${symbol} Inc.`;
+
+    // Use helper to get accurate price
+    const marketData = getMarketPriceForSymbol(symbol);
+    price = marketData.price || portfolioStock?.currentPrice || marketStock?.price || 150;
   }
 
   // Check if already in watchlist
@@ -1294,12 +1439,15 @@ function addToWatchlist(symbol, name, price) {
     return; // Already in watchlist, no action needed
   }
 
+  // Get accurate price and change from market data
+  const marketData = getMarketPriceForSymbol(symbol);
+
   // Add to watchlist
   demoWatchlistData.push({
     symbol: symbol,
     name: name,
-    price: price,
-    changePercent: Math.random() * 6 - 3 // Random change for demo
+    price: price || marketData.price,
+    changePercent: marketData.changePercent || (Math.random() * 6 - 3) // Use market data or random for demo
   });
 
   // Visual feedback
@@ -1463,10 +1611,31 @@ function renderMarketData(data) {
   const container = document.getElementById('marketDataList');
   if (!container) return;
 
+  // Handle empty data
+  if (!data || data.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 40px; text-align: center; color: #64748b;">
+        <i class="fas fa-chart-line" style="font-size: 32px; opacity: 0.5; margin-bottom: 12px; display: block;"></i>
+        <p>No market data available</p>
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = data.map(stock => {
-    const isPositive = stock.change >= 0;
-    const iconInfo = getStockIcon(stock.symbol);
-    const inWatchlist = isInWatchlist(stock.symbol);
+    // Safely extract all values with fallbacks
+    const symbol = stock.symbol || stock.tickerSymbol || 'N/A';
+    const name = stock.name || stock.assetName || stock.companyName || symbol;
+    const price = stock.price || stock.currentPrice || 0;
+    const change = stock.change || stock.priceChange || 0;
+    const changePercent = stock.changePercent || stock.percentChange || 0;
+    const volume = stock.volume || 'N/A';
+    const sector = stock.sector || stock.assetType || 'Unknown';
+    const marketCap = stock.marketCap || 'N/A';
+
+    const isPositive = change >= 0;
+    const iconInfo = getStockIcon(symbol);
+    const inWatchlist = isInWatchlist(symbol);
     const watchlistIcon = inWatchlist ? 'fas fa-star' : 'far fa-star';
     const watchlistColor = inWatchlist ? '#f59e0b' : '#94a3b8';
 
@@ -1478,45 +1647,54 @@ function renderMarketData(data) {
       'Consumer Discretionary': '#8b5cf6',
       'Consumer Staples': '#06b6d4',
       'Communication Services': '#ef4444',
-      'ETF': '#64748b'
+      'ETF': '#64748b',
+      'STOCK': '#3b82f6',
+      'Unknown': '#94a3b8'
     };
-    const sectorColor = sectorColors[stock.sector] || '#64748b';
+    const sectorColor = sectorColors[sector] || '#64748b';
+    const sectorDisplay = sector === 'Consumer Discretionary' ? 'CONS' :
+                          sector === 'Communication Services' ? 'COMM' :
+                          (sector || 'N/A').substring(0, 4).toUpperCase();
+
+    // Safely format numbers
+    const changeDisplay = Number(change).toFixed(2);
+    const changePercentDisplay = Number(changePercent).toFixed(2);
 
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;"
            onmouseover="this.style.backgroundColor='#f8fafc'"
            onmouseout="this.style.backgroundColor='transparent'">
         <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-          ${renderStockIconHtml(stock.symbol, iconInfo, 36)}
+          ${renderStockIconHtml(symbol, iconInfo, 36)}
           <div style="flex: 1; min-width: 0;">
             <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 1px;">
-              <div style="font-weight: 700; color: #1e293b; font-size: 14px;">${stock.symbol}</div>
+              <div style="font-weight: 700; color: #1e293b; font-size: 14px;">${symbol}</div>
               <div style="background: ${sectorColor}; color: white; padding: 1px 4px; border-radius: 3px; font-size: 8px; font-weight: 600; text-transform: uppercase;">
-                ${stock.sector === 'Consumer Discretionary' ? 'CONS' : stock.sector === 'Communication Services' ? 'COMM' : stock.sector.substring(0,4).toUpperCase()}
+                ${sectorDisplay}
               </div>
             </div>
-            <div style="font-size: 11px; color: #64748b; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${stock.name}</div>
+            <div style="font-size: 11px; color: #64748b; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${name}</div>
             <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: #64748b;">
-              <span title="Volume"><i class="fas fa-chart-bar" style="width: 10px;"></i> ${stock.volume}</span>
-              ${stock.marketCap !== 'N/A' ? `<span title="Market Cap"><i class="fas fa-building" style="width: 10px;"></i> ${stock.marketCap}</span>` : ''}
+              <span title="Volume"><i class="fas fa-chart-bar" style="width: 10px;"></i> ${volume}</span>
+              ${marketCap !== 'N/A' ? `<span title="Market Cap"><i class="fas fa-building" style="width: 10px;"></i> ${marketCap}</span>` : ''}
             </div>
           </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 6px;">
           <div style="text-align: right; min-width: 110px;">
-            <div style="font-weight: 700; color: #1e293b; font-size: 14px;">${formatCurrency(stock.price)}</div>
+            <div style="font-weight: 700; color: #1e293b; font-size: 14px;">${formatCurrency(price)}</div>
             <div class="price-change ${isPositive ? 'stock-up' : 'stock-down'}" style="font-size: 12px; font-weight: 600;">
               <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
-              <span>${isPositive ? '+' : ''}${stock.change.toFixed(2)}</span>
+              <span>${isPositive ? '+' : ''}${changeDisplay}</span>
             </div>
             <div class="price-change ${isPositive ? 'stock-up' : 'stock-down'}" style="font-size: 10px; font-weight: 500;">
-              ${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%
+              ${isPositive ? '+' : ''}${changePercentDisplay}%
             </div>
           </div>
 
           <div style="display: flex; align-items: center; gap: 4px;">
-            <button onclick="toggleWatchlist('${stock.symbol}', '${stock.name}', ${stock.price})"
+            <button onclick="toggleWatchlist('${symbol}', '${name.replace(/'/g, "\\'")}', ${price})"
                     style="background: rgba(148,163,184,0.1); border: 1px solid #e2e8f0; cursor: pointer; padding: 6px 8px; border-radius: 6px; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
                     onmouseover="this.style.background='rgba(245,158,11,0.1)'; this.style.borderColor='${inWatchlist ? '#f59e0b' : '#cbd5e1'}';"
                     onmouseout="this.style.background='rgba(148,163,184,0.1)'; this.style.borderColor='#e2e8f0';"
@@ -1525,14 +1703,14 @@ function renderMarketData(data) {
             </button>
 
             <div style="display: flex; flex-direction: column; gap: 2px;">
-              <button onclick="quickTrade('${stock.symbol}', 'BUY')"
+              <button onclick="quickTrade('${symbol}', 'BUY')"
                       style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: white; cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; transition: all 0.2s;"
                       onmouseover="this.style.transform='scale(1.05)'"
                       onmouseout="this.style.transform='scale(1)'"
                       title="Quick Buy">
                 <i class="fas fa-plus" style="font-size: 7px;"></i> BUY
               </button>
-              <button onclick="quickTrade('${stock.symbol}', 'SELL')"
+              <button onclick="quickTrade('${symbol}', 'SELL')"
                       style="background: linear-gradient(135deg, #ef4444, #dc2626); border: none; color: white; cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; transition: all 0.2s;"
                       onmouseover="this.style.transform='scale(1.05)'"
                       onmouseout="this.style.transform='scale(1)'"
@@ -1582,12 +1760,17 @@ function renderMarketData(data) {
 
 // Calculate market summary statistics
 function calculateMarketSummary(data) {
-  const totalStocks = data.length;
-  const gainers = data.filter(stock => stock.changePercent > 0).length;
-  const losers = data.filter(stock => stock.changePercent < 0).length;
-  const avgChange = data.reduce((sum, stock) => sum + stock.changePercent, 0) / totalStocks;
+  if (!data || data.length === 0) {
+    return { totalStocks: 0, gainers: 0, losers: 0, avgChange: 0 };
+  }
 
-  return { totalStocks, gainers, losers, avgChange };
+  const totalStocks = data.length;
+  const gainers = data.filter(stock => (stock.changePercent || 0) > 0).length;
+  const losers = data.filter(stock => (stock.changePercent || 0) < 0).length;
+  const totalChange = data.reduce((sum, stock) => sum + (stock.changePercent || 0), 0);
+  const avgChange = totalStocks > 0 ? totalChange / totalStocks : 0;
+
+  return { totalStocks, gainers, losers, avgChange: avgChange || 0 };
 }
 
 async function refreshMarketData() {

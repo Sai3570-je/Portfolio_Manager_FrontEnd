@@ -463,11 +463,16 @@ async function deletePositionById(id) {
  */
 async function fetchOrders() {
   try {
-    console.log('📡 Fetching orders');
+    console.log('📡 Fetching orders from:', `${BACKEND_URL}/orders`);
     const response = await fetch(`${BACKEND_URL}/orders`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
-    console.log('✅ Orders fetched:', data);
+    console.log('✅ Orders fetched - count:', Array.isArray(data) ? data.length : 'not array');
+    console.log('📋 Orders raw data:', JSON.stringify(data).substring(0, 1000));
+    if (Array.isArray(data) && data.length > 0) {
+      console.log('📋 First order item keys:', Object.keys(data[0]));
+      console.log('📋 First order item:', data[0]);
+    }
     return data;
   } catch (error) {
     console.error('❌ fetchOrders error:', error);
@@ -648,11 +653,16 @@ async function createMarketQuote(data) {
  */
 async function fetchWatchlist() {
   try {
-    console.log('📡 Fetching watchlist');
+    console.log('📡 Fetching watchlist from:', `${BACKEND_URL}/watchlist`);
     const response = await fetch(`${BACKEND_URL}/watchlist`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
-    console.log('✅ Watchlist fetched:', data);
+    console.log('✅ Watchlist fetched - count:', Array.isArray(data) ? data.length : 'not array');
+    console.log('📋 Watchlist raw data:', JSON.stringify(data).substring(0, 1000));
+    if (Array.isArray(data) && data.length > 0) {
+      console.log('📋 First watchlist item keys:', Object.keys(data[0]));
+      console.log('📋 First watchlist item:', data[0]);
+    }
     return data;
   } catch (error) {
     console.error('❌ fetchWatchlist error:', error);
