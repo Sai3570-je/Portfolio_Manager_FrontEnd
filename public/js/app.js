@@ -85,7 +85,7 @@ const I18N_DICT = {
     'Total Investment': 'एकूण गुंतवणूक',
     'Total Gain/Loss': 'एकूण नफा/तोटा',
     'Holdings': 'होल्डिंग्स',
-    'Active positions': 'सक���रिय पोझिशन्स',
+    'Active positions': 'सक्रीय पोझिशन्स',
     'Original capital invested': 'मूळ गुंतवलेले भांडवल',
     'Overall performance': 'एकूण कामगिरी',
     'Search stocks, portfolios...': 'शेअर्स, पोर्टफोलिओ शोधा...'
@@ -106,7 +106,7 @@ const I18N_DICT = {
     'Refresh': 'రిఫ్రెష్',
     'Top Market Movers': 'టాప్ మార్కెట్ మూవర్స్',
     'Top Gainers': 'టాప్ గైనర్స్',
-    'Top Losers': 'టాప్ ల���జర్స్',
+    'Top Losers': 'టాప్ లూజర్స్',
     'Sectors Trending Today': 'ఈరోజు ట్రెండింగ్ రంగాలు',
     'Portfolio Performance': 'పోర్ట్‌ఫోలియో పనితీరు',
     'Asset Allocation': 'ఆస్తుల కేటాయింపు',
@@ -575,6 +575,10 @@ async function loadDataFromBackend() {
     try {
       backendInstruments = await portfolioAPI.fetchInstruments();
       console.log('✅ Instruments loaded:', backendInstruments.length, 'items');
+      // Log first item to see the data structure
+      if (backendInstruments.length > 0) {
+        console.log('📋 Sample instrument data:', backendInstruments[0]);
+      }
     } catch (err) {
       console.warn('⚠️ Could not fetch instruments:', err.message);
     }
@@ -583,13 +587,18 @@ async function loadDataFromBackend() {
     try {
       backendSnapshots = await portfolioAPI.fetchSnapshots();
       console.log('✅ Snapshots loaded:', backendSnapshots.length, 'items');
+      // Log first item to see the data structure
+      if (backendSnapshots.length > 0) {
+        console.log('📋 Sample snapshot data:', backendSnapshots[0]);
+      }
     } catch (err) {
       console.warn('⚠️ Could not fetch snapshots:', err.message);
     }
 
-    // If we got instruments, update the market data display
+    // If we got instruments, update the market data and portfolio displays
     if (backendInstruments.length > 0) {
       updateMarketDataFromBackend(backendInstruments);
+      updatePortfolioFromBackend(backendInstruments);
     }
 
   } catch (error) {
@@ -623,6 +632,31 @@ function updateMarketDataFromBackend(instruments) {
         demoMarketData.push(item);
       }
     });
+  }
+}
+
+// Update portfolio data from backend instruments
+function updatePortfolioFromBackend(instruments) {
+  // Map backend instruments to portfolio format
+  const portfolioItems = instruments
+    .filter(inst => inst.quantity && inst.quantity > 0) // Only items with quantity
+    .map((inst, index) => ({
+      id: inst.id || index + 1,
+      tickerSymbol: inst.tickerSymbol || inst.symbol || inst.ticker,
+      assetName: inst.assetName || inst.name || inst.companyName,
+      assetType: inst.assetType || 'STOCK',
+      quantity: inst.quantity || 0,
+      purchasePrice: inst.purchasePrice || inst.avgCost || inst.price || 0,
+      currentPrice: inst.currentPrice || inst.price || 0
+    }));
+
+  if (portfolioItems.length > 0) {
+    console.log('📊 Updating portfolio with backend instruments:', portfolioItems.length, 'items');
+    // Replace demo portfolio data with backend data
+    demoPortfolioData.length = 0;
+    demoPortfolioData.push(...portfolioItems);
+  } else {
+    console.log('ℹ️ No portfolio items with quantity found in instruments, using demo data');
   }
 }
 
@@ -753,7 +787,7 @@ function loadTopGainersSuggestions() {
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <span style="font-size: 14px; font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</span>
-            <span style="font-size: 11px; color: #64748b;">Vol: ${stock.volume}</span>
+            <span style="font-size: 11px, color: #64748b;">Vol: ${stock.volume}</span>
           </div>
         </div>
         <div style="display: flex; justify-content: flex-end; padding-top: 8px; border-top: 1px solid #f1f5f9;">
@@ -761,7 +795,7 @@ function loadTopGainersSuggestions() {
                   style="background: ${inWatchlist ? 'rgba(245,158,11,0.1)' : 'rgba(148,163,184,0.1)'}; border: 1px solid ${inWatchlist ? '#f59e0b' : '#e2e8f0'}; border-radius: 6px; cursor: pointer; padding: 6px 12px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; font-size: 12px; font-weight: 600; color: ${inWatchlist ? '#f59e0b' : '#64748b'};"
                   onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.1)';"
                   onmouseout="this.style.transform=''; this.style.boxShadow='none';"
-                  title="${inWatchlist ? 'Remove from' : 'Add to'} watchlist">
+                  title="${inWatchlist ? 'Remove from' : 'Add to Watchlist'}">
             <i class="${watchlistIcon}" style="color: ${watchlistColor}; font-size: 13px;"></i>
             <span>${inWatchlist ? 'In Watchlist' : 'Add to Watchlist'}</span>
           </button>
@@ -1180,6 +1214,10 @@ function showWatchlistFeedback(action, symbol, name) {
         0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
         50% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
         100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+      }
+      @keyframes valueChange {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
       }
     `;
     document.head.appendChild(style);
@@ -2152,7 +2190,7 @@ function showActionFeedback(action, symbol, quantity, price, details, changes) {
             </div>
             <div>
               <div style="font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total Investment</div>
-              <div style="font-size: 16px; font-weight: 700; color: #1e293b;">${formatCurrency(changes.newTotalInvestment)}</div>
+              <div style="font-size: 16px, font-weight: 700; color: #1e293b;">${formatCurrency(changes.newTotalInvestment)}</div>
               <div style="font-size: 12px; margin-top: 2px;">${formatChange(changes.investmentChange)}</div>
             </div>
             <div>
@@ -2351,7 +2389,6 @@ function refreshAllDisplays() {
   if (totalGainLossEl) {
     totalGainLossEl.textContent = (summary.totalGainLoss >= 0 ? '+' : '') + formatCurrency(summary.totalGainLoss);
     totalGainLossEl.style.color = summary.totalGainLoss >= 0 ? '#10b981' : '#ef4444';
-    console.log('✅ Updated totalGainLoss:', totalGainLossEl.textContent);
   }
   if (totalItemsEl) {
     totalItemsEl.textContent = summary.itemCount;
@@ -2549,14 +2586,6 @@ window.addToWatchlist = addToWatchlist;
 window.removeFromWatchlist = removeFromWatchlist;
 window.toggleWatchlist = toggleWatchlist;
 window.isInWatchlist = isInWatchlist;
-window.toggleSidebar = toggleSidebar;
-window.updateChartPeriod = updateChartPeriod;
-window.handleFormSubmit = handleFormSubmit;
-window.toggleNews = toggleNews;
-window.refreshAllData = refreshAllData;
-window.refreshSuggestions = refreshSuggestions;
-window.refreshNews = refreshNews;
-window.addToWatchlist = addToWatchlist;
 window.toggleSidebar = toggleSidebar;
 window.updateChartPeriod = updateChartPeriod;
 window.handleFormSubmit = handleFormSubmit;

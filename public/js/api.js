@@ -10,6 +10,9 @@ const BACKEND_URL = 'http://localhost:8080/api';
 // Local Node.js server API (fallback)
 const LOCAL_API_BASE = '/api/portfolio';
 
+// Default user ID for portfolio operations (configure as needed)
+const DEFAULT_USER_ID = 1;
+
 /**
  * Fetch all instruments from backend
  * @returns {Promise<Array>} Array of instruments
@@ -55,23 +58,36 @@ async function fetchSnapshots() {
 }
 
 /**
- * Fetch all portfolio holdings (tries backend first, falls back to local)
- * @returns {Promise<Array>} Array of portfolio holdings
+ * Fetch portfolio by user ID from backend
+ * @param {number} userId - User ID (defaults to 1)
+ * @returns {Promise<Object>} Portfolio data
  */
-async function fetchPortfolio() {
+async function fetchPortfolio(userId = DEFAULT_USER_ID) {
   try {
-    // Try fetching from Spring Boot backend first
-    console.log('📡 Fetching portfolio from backend...');
-    const response = await fetch(`${BACKEND_URL}/portfolio`);
+    // Try fetching from Spring Boot backend first with userId
+    console.log('📡 Fetching portfolio from backend for user:', userId);
+    const response = await fetch(`${BACKEND_URL}/portfolio/${userId}`);
 
     if (response.ok) {
-      const data = await response.json();
-      console.log('✅ Portfolio fetched from backend:', data);
-      return Array.isArray(data) ? data : (data.data || data);
+      // Get raw text first to handle malformed JSON
+      const text = await response.text();
+      console.log('📋 Raw portfolio response:', text.substring(0, 200) + '...');
+
+      try {
+        const data = JSON.parse(text);
+        console.log('✅ Portfolio fetched from backend:', data);
+        // Handle different response formats
+        if (data.assets && Array.isArray(data.assets)) return data.assets;
+        if (Array.isArray(data)) return data;
+        return data.data || data;
+      } catch (parseError) {
+        console.warn('⚠️ Backend returned invalid JSON, falling back to local API');
+        console.warn('Parse error:', parseError.message);
+      }
     }
 
     // Fallback to local Node.js API
-    console.log('⚠️ Backend unavailable, trying local API...');
+    console.log('⚠️ Backend unavailable or invalid response, trying local API...');
     const localResponse = await fetch(LOCAL_API_BASE);
     const result = await localResponse.json();
 
@@ -118,30 +134,24 @@ async function fetchHolding(id) {
 }
 
 /**
- * Create a new portfolio position
- * @param {Object} positionData - Position data
- * @param {string} positionData.tickerSymbol - Stock ticker symbol
- * @param {string} positionData.assetName - Asset name
- * @param {string} positionData.assetType - Asset type (STOCK, ETF, CRYPTO)
- * @param {number} positionData.quantity - Number of shares
- * @param {number} positionData.purchasePrice - Purchase price per share
- * @param {number} [positionData.currentPrice] - Current price per share
- * @returns {Promise<Object>} Created position
+ * Add asset to portfolio (POST /api/portfolio/asset)
+ * @param {Object} assetData - Asset data
+ * @returns {Promise<Object>} Created asset
  */
-async function createPosition(positionData) {
+async function createPosition(assetData) {
   try {
-    console.log('📡 Creating position:', positionData);
+    console.log('📡 Adding asset to portfolio:', assetData);
 
-    // Try backend first
-    const response = await fetch(`${BACKEND_URL}/portfolio`, {
+    // Try backend first - uses /api/portfolio/asset endpoint
+    const response = await fetch(`${BACKEND_URL}/portfolio/asset`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(positionData)
+      body: JSON.stringify(assetData)
     });
 
     if (response.ok) {
       const data = await response.json();
-      console.log('✅ Position created on backend:', data);
+      console.log('✅ Asset added on backend:', data);
       return data;
     }
 
@@ -149,13 +159,13 @@ async function createPosition(positionData) {
     const localResponse = await fetch(LOCAL_API_BASE, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(positionData)
+      body: JSON.stringify(assetData)
     });
 
     const result = await localResponse.json();
 
     if (!localResponse.ok || !result.success) {
-      throw new Error(result.error || 'Failed to create position');
+      throw new Error(result.error || 'Failed to add asset');
     }
 
     return result.data;
@@ -166,17 +176,17 @@ async function createPosition(positionData) {
 }
 
 /**
- * Update an existing portfolio position
- * @param {number} id - Holding ID
+ * Update an existing portfolio asset (PUT /api/portfolio/asset/{id})
+ * @param {number} id - Asset ID
  * @param {Object} updateData - Fields to update
- * @returns {Promise<Object>} Updated position
+ * @returns {Promise<Object>} Updated asset
  */
 async function updatePosition(id, updateData) {
   try {
-    console.log('📡 Updating position:', id, updateData);
+    console.log('📡 Updating asset:', id, updateData);
 
-    // Try backend first
-    const response = await fetch(`${BACKEND_URL}/portfolio/${id}`, {
+    // Try backend first - uses /api/portfolio/asset/{id} endpoint
+    const response = await fetch(`${BACKEND_URL}/portfolio/asset/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updateData)
@@ -184,7 +194,7 @@ async function updatePosition(id, updateData) {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('✅ Position updated on backend:', data);
+      console.log('✅ Asset updated on backend:', data);
       return data;
     }
 
@@ -198,7 +208,7 @@ async function updatePosition(id, updateData) {
     const result = await localResponse.json();
 
     if (!localResponse.ok || !result.success) {
-      throw new Error(result.error || 'Failed to update position');
+      throw new Error(result.error || 'Failed to update asset');
     }
 
     return result.data;
@@ -209,22 +219,22 @@ async function updatePosition(id, updateData) {
 }
 
 /**
- * Delete a portfolio position
- * @param {number} id - Holding ID
- * @returns {Promise<Object>} Deleted position
+ * Delete a portfolio asset (DELETE /api/portfolio/asset/{id})
+ * @param {number} id - Asset ID
+ * @returns {Promise<Object>} Deleted asset
  */
 async function deletePosition(id) {
   try {
-    console.log('📡 Deleting position:', id);
+    console.log('📡 Deleting asset:', id);
 
-    // Try backend first
-    const response = await fetch(`${BACKEND_URL}/portfolio/${id}`, {
+    // Try backend first - uses /api/portfolio/asset/{id} endpoint
+    const response = await fetch(`${BACKEND_URL}/portfolio/asset/${id}`, {
       method: 'DELETE'
     });
 
     if (response.ok) {
       const data = await response.json();
-      console.log('✅ Position deleted on backend:', data);
+      console.log('✅ Asset deleted on backend:', data);
       return data;
     }
 
@@ -236,12 +246,35 @@ async function deletePosition(id) {
     const result = await localResponse.json();
 
     if (!localResponse.ok || !result.success) {
-      throw new Error(result.error || 'Failed to delete position');
+      throw new Error(result.error || 'Failed to delete asset');
     }
 
     return result.data;
   } catch (error) {
     console.error('❌ deletePosition error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get total portfolio value (GET /api/portfolio/total-value/{portfolioId})
+ * @param {number} portfolioId - Portfolio ID
+ * @returns {Promise<number>} Total value
+ */
+async function getPortfolioTotalValue(portfolioId = 1) {
+  try {
+    console.log('📡 Fetching portfolio total value for:', portfolioId);
+    const response = await fetch(`${BACKEND_URL}/portfolio/total-value/${portfolioId}`);
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('✅ Portfolio total value:', data);
+      return data;
+    }
+
+    throw new Error('Failed to get portfolio total value');
+  } catch (error) {
+    console.error('❌ getPortfolioTotalValue error:', error);
     throw error;
   }
 }
@@ -254,5 +287,6 @@ window.portfolioAPI = {
   fetchHolding,
   createPosition,
   updatePosition,
-  deletePosition
+  deletePosition,
+  getPortfolioTotalValue
 };
