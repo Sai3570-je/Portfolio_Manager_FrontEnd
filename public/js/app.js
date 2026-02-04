@@ -525,6 +525,12 @@ async function initializeApp() {
   try {
     // Load demo data
     loadDemoData();
+    m1.getInstruments().then(data =>{
+      console.log(data);}).catch(error => {
+
+        console.error('Error fetching instruments:', error);
+      }
+      );
 
     // Load all new features
     loadTopGainersSuggestions();
@@ -998,6 +1004,8 @@ function addToWatchlist(symbol, name, price) {
   // Highlight watchlist panel
   highlightWatchlistPanel();
 }
+
+
 
 function removeFromWatchlist(symbol) {
   const index = demoWatchlistData.findIndex(s => s.symbol === symbol);
