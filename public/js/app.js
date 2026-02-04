@@ -305,6 +305,9 @@ const demoPortfolioData = [
   { id: 5, tickerSymbol: 'NVDA', assetName: 'NVIDIA Corp.', assetType: 'STOCK', quantity: 10, purchasePrice: 450.00, currentPrice: 875.30 }
 ];
 
+// Demo Transactions Data
+const demoTransactionsData = [];
+
 // Top Gainers Data
 const topGainersData = [
   { symbol: 'NVDA', name: 'NVIDIA Corp.', price: 875.30, changePercent: 5.67, volume: '67.8M' },
@@ -529,6 +532,15 @@ async function initializeApp() {
     // Fetch portfolio data from API
     await loadPortfolioFromAPI();
 
+    // Load orders from backend
+    await loadOrdersFromBackend();
+
+    // Load watchlist from backend
+    await loadWatchlistFromBackend();
+
+    // Load transactions from backend
+    await loadTransactionsFromBackend();
+
     // Load demo data for other displays
     loadDemoData();
 
@@ -565,6 +577,10 @@ async function initializeApp() {
 // Store backend data globally
 let backendInstruments = [];
 let backendSnapshots = [];
+let backendOrders = [];
+let backendWatchlist = [];
+let backendTransactions = [];
+let backendPositions = [];
 
 // Load data from Spring Boot backend (localhost:8080)
 async function loadDataFromBackend() {
@@ -595,6 +611,25 @@ async function loadDataFromBackend() {
       console.warn('⚠️ Could not fetch snapshots:', err.message);
     }
 
+    // Fetch positions
+    try {
+      backendPositions = await portfolioAPI.fetchPositions();
+      console.log('✅ Positions loaded:', backendPositions.length, 'items');
+    } catch (err) {
+      console.warn('⚠️ Could not fetch positions:', err.message);
+    }
+
+    // Fetch market quotes
+    try {
+      const quotes = await portfolioAPI.fetchMarketQuotes();
+      console.log('✅ Market quotes loaded:', quotes.length, 'items');
+      if (quotes.length > 0) {
+        updateMarketDataFromQuotes(quotes);
+      }
+    } catch (err) {
+      console.warn('⚠️ Could not fetch market quotes:', err.message);
+    }
+
     // If we got instruments, update the market data and portfolio displays
     if (backendInstruments.length > 0) {
       updateMarketDataFromBackend(backendInstruments);
@@ -604,6 +639,32 @@ async function loadDataFromBackend() {
   } catch (error) {
     console.warn('⚠️ Backend not available, using demo data:', error.message);
   }
+}
+
+// Update market data from backend market quotes
+function updateMarketDataFromQuotes(quotes) {
+  console.log('📊 Updating market data with backend quotes');
+  quotes.forEach(quote => {
+    const symbol = quote.symbol || quote.instrumentSymbol;
+    const existingIndex = demoMarketData.findIndex(d => d.symbol === symbol);
+
+    const mappedQuote = {
+      symbol: symbol,
+      name: quote.name || quote.instrumentName || symbol,
+      price: quote.price || quote.currentPrice || 0,
+      change: quote.change || quote.priceChange || 0,
+      changePercent: quote.changePercent || quote.percentChange || 0,
+      volume: quote.volume || 'N/A',
+      sector: quote.sector || 'Unknown',
+      marketCap: quote.marketCap || 'N/A'
+    };
+
+    if (existingIndex >= 0) {
+      demoMarketData[existingIndex] = { ...demoMarketData[existingIndex], ...mappedQuote };
+    } else {
+      demoMarketData.push(mappedQuote);
+    }
+  });
 }
 
 // Update market data display with backend instruments
@@ -664,12 +725,83 @@ function updatePortfolioFromBackend(instruments) {
 async function loadPortfolioFromAPI() {
   try {
     const data = await portfolioAPI.fetchPortfolio();
-    // Update demoPortfolioData with API data
-    demoPortfolioData.length = 0; // Clear existing data
-    demoPortfolioData.push(...data);
-    console.log('✅ Portfolio data loaded from API:', data.length, 'items');
+    if (Array.isArray(data) && data.length > 0) {
+      // Map data to ensure correct format
+      const mappedData = data.map(item => ({
+        id: item.id,
+        tickerSymbol: item.tickerSymbol || item.symbol || 'N/A',
+        assetName: item.assetName || item.companyName || item.name || 'Unknown',
+        assetType: item.assetType || 'STOCK',
+        quantity: item.quantity || 0,
+        purchasePrice: item.purchasePrice || item.avgPurchasePrice || 0,
+        currentPrice: item.currentPrice || item.purchasePrice || 0
+      }));
+      demoPortfolioData.length = 0;
+      demoPortfolioData.push(...mappedData);
+      console.log('✅ Portfolio data loaded from API:', mappedData.length, 'items');
+    }
   } catch (error) {
     console.warn('Could not fetch portfolio from API, using demo data:', error);
+  }
+}
+
+// Load orders from backend API
+async function loadOrdersFromBackend() {
+  try {
+    const data = await portfolioAPI.fetchOrders();
+    if (Array.isArray(data) && data.length > 0) {
+      // Map data to ensure correct format
+      const mappedData = data.map(order => ({
+        id: order.id,
+        symbol: order.symbol || order.instrumentSymbol || 'N/A',
+        type: order.type || order.orderType || 'BUY',
+        quantity: order.quantity || 0,
+        price: order.price || order.orderPrice || 0,
+        date: order.date || order.orderDate || new Date().toISOString().split('T')[0],
+        status: order.status || 'Pending'
+      }));
+      demoOrdersData.length = 0;
+      demoOrdersData.push(...mappedData);
+      console.log('✅ Orders data loaded from backend:', mappedData.length, 'items');
+    }
+  } catch (error) {
+    console.warn('Could not fetch orders from backend:', error);
+  }
+}
+
+// Load watchlist from backend API
+async function loadWatchlistFromBackend() {
+  try {
+    const data = await portfolioAPI.fetchWatchlist();
+    if (Array.isArray(data) && data.length > 0) {
+      // Map data to ensure correct format
+      const mappedData = data.map(item => ({
+        id: item.id,
+        symbol: item.symbol || item.instrumentSymbol || 'N/A',
+        name: item.name || item.instrumentName || 'Unknown',
+        price: item.price || item.currentPrice || 0,
+        changePercent: item.changePercent || item.percentChange || 0
+      }));
+      demoWatchlistData.length = 0;
+      demoWatchlistData.push(...mappedData);
+      console.log('✅ Watchlist data loaded from backend:', mappedData.length, 'items');
+    }
+  } catch (error) {
+    console.warn('Could not fetch watchlist from backend:', error);
+  }
+}
+
+// Load transactions from backend API
+async function loadTransactionsFromBackend() {
+  try {
+    const data = await portfolioAPI.fetchTransactions();
+    if (Array.isArray(data) && data.length > 0) {
+      demoTransactionsData.length = 0;
+      demoTransactionsData.push(...data);
+      console.log('✅ Transactions data loaded from backend:', data.length, 'items');
+    }
+  } catch (error) {
+    console.warn('Could not fetch transactions from backend:', error);
   }
 }
 
@@ -763,35 +895,46 @@ function loadTopGainersSuggestions() {
   const container = document.getElementById('topGainersSuggestions');
   if (!container) return;
 
+  if (!topGainersData || topGainersData.length === 0) {
+    container.innerHTML = '<div style="padding: 12px; color: #64748b;">No data available</div>';
+    return;
+  }
+
   container.innerHTML = topGainersData.map(stock => {
-    const iconInfo = getStockIcon(stock.symbol);
-    const inWatchlist = isInWatchlist(stock.symbol);
+    const symbol = stock.symbol || 'N/A';
+    const name = stock.name || symbol;
+    const price = stock.price || 0;
+    const changePercent = stock.changePercent ?? 0;
+    const volume = stock.volume || 'N/A';
+
+    const iconInfo = getStockIcon(symbol);
+    const inWatchlist = isInWatchlist(symbol);
     const watchlistIcon = inWatchlist ? 'fas fa-star' : 'far fa-star';
     const watchlistColor = inWatchlist ? '#f59e0b' : '#94a3b8';
 
     return `
       <div class="suggestion-card" style="position: relative; padding: 12px; display: flex; flex-direction: column;">
-        <div onclick="quickTrade('${stock.symbol}', 'BUY')" style="cursor: pointer; flex: 1;">
+        <div onclick="quickTrade('${symbol}', 'BUY')" style="cursor: pointer; flex: 1;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              ${renderStockIconHtml(stock.symbol, iconInfo, 40)}
+              ${renderStockIconHtml(symbol, iconInfo, 40)}
               <div>
-                <div style="font-weight: 600; color: #1e293b;">${stock.symbol}</div>
-                <div style="font-size: 11px; color: #64748b; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${stock.name}</div>
+                <div style="font-weight: 600; color: #1e293b;">${symbol}</div>
+                <div style="font-size: 11px; color: #64748b; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${name}</div>
               </div>
             </div>
             <div class="gain-indicator up" style="font-size: 12px;">
               <i class="fas fa-arrow-up"></i>
-              +${stock.changePercent.toFixed(2)}%
+              +${Number(changePercent).toFixed(2)}%
             </div>
           </div>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="font-size: 14px; font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</span>
-            <span style="font-size: 11px, color: #64748b;">Vol: ${stock.volume}</span>
+            <span style="font-size: 14px; font-weight: 600; color: #1e293b;">${formatCurrency(price)}</span>
+            <span style="font-size: 11px, color: #64748b;">Vol: ${volume}</span>
           </div>
         </div>
         <div style="display: flex; justify-content: flex-end; padding-top: 8px; border-top: 1px solid #f1f5f9;">
-          <button onclick="event.stopPropagation(); toggleWatchlist('${stock.symbol}', '${stock.name}', ${stock.price})"
+          <button onclick="event.stopPropagation(); toggleWatchlist('${symbol}', '${name}', ${price})"
                   style="background: ${inWatchlist ? 'rgba(245,158,11,0.1)' : 'rgba(148,163,184,0.1)'}; border: 1px solid ${inWatchlist ? '#f59e0b' : '#e2e8f0'}; border-radius: 6px; cursor: pointer; padding: 6px 12px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; font-size: 12px; font-weight: 600; color: ${inWatchlist ? '#f59e0b' : '#64748b'};"
                   onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 2px 6px rgba(0,0,0,0.1)';"
                   onmouseout="this.style.transform=''; this.style.boxShadow='none';"
@@ -822,40 +965,48 @@ function loadTopMarketMovers() {
   if (!gainersContainer || !losersContainer) return;
 
   // Gainers
-  gainersContainer.innerHTML = topGainersData.slice(0, 5).map(stock => {
-    const iconInfo = getStockIcon(stock.symbol);
+  gainersContainer.innerHTML = (topGainersData || []).slice(0, 5).map(stock => {
+    const symbol = stock.symbol || 'N/A';
+    const price = stock.price || 0;
+    const volume = stock.volume || 'N/A';
+    const changePercent = stock.changePercent ?? 0;
+    const iconInfo = getStockIcon(symbol);
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(16,185,129,0.2);">
         <div style="display: flex; align-items: center; gap: 8px;">
-          ${renderStockIconHtml(stock.symbol, iconInfo, 32)}
+          ${renderStockIconHtml(symbol, iconInfo, 32)}
           <div>
-            <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${stock.symbol}</div>
-            <div style="font-size: 10px; color: #64748b;">${stock.volume}</div>
+            <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${symbol}</div>
+            <div style="font-size: 10px; color: #64748b;">${volume}</div>
           </div>
         </div>
         <div style="text-align: right;">
-          <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${formatCurrency(stock.price)}</div>
-          <div style="color: #10b981; font-size: 11px; font-weight: 600;">+${stock.changePercent.toFixed(2)}%</div>
+          <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${formatCurrency(price)}</div>
+          <div style="color: #10b981; font-size: 11px; font-weight: 600;">+${Number(changePercent).toFixed(2)}%</div>
         </div>
       </div>
     `;
   }).join('');
 
   // Losers
-  losersContainer.innerHTML = topLosersData.slice(0, 5).map(stock => {
-    const iconInfo = getStockIcon(stock.symbol);
+  losersContainer.innerHTML = (topLosersData || []).slice(0, 5).map(stock => {
+    const symbol = stock.symbol || 'N/A';
+    const price = stock.price || 0;
+    const volume = stock.volume || 'N/A';
+    const changePercent = stock.changePercent ?? 0;
+    const iconInfo = getStockIcon(symbol);
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(239,68,68,0.2);">
         <div style="display: flex; align-items: center; gap: 8px;">
-          ${renderStockIconHtml(stock.symbol, iconInfo, 32)}
+          ${renderStockIconHtml(symbol, iconInfo, 32)}
           <div>
-            <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${stock.symbol}</div>
-            <div style="font-size: 10px; color: #64748b;">${stock.volume}</div>
+            <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${symbol}</div>
+            <div style="font-size: 10px; color: #64748b;">${volume}</div>
           </div>
         </div>
         <div style="text-align: right;">
-          <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${formatCurrency(stock.price)}</div>
-          <div style="color: #ef4444; font-size: 11px; font-weight: 600;">${stock.changePercent.toFixed(2)}%</div>
+          <div style="font-weight: 600; font-size: 13px; color: #1e293b;">${formatCurrency(price)}</div>
+          <div style="color: #ef4444; font-size: 11px; font-weight: 600;">${Number(changePercent).toFixed(2)}%</div>
         </div>
       </div>
     `;
@@ -940,7 +1091,7 @@ function loadStocksInNews() {
                 <i class="fas fa-chart-line"></i>Market Impact
               </span>
             </div>
-            <button onclick="toggleNews(${idx})" id="news-btn-${idx}" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+            <button onclick="toggleNews(${idx})" id="news-btn-${idx}" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600;">
               <i class="fas fa-plus"></i> Details
             </button>
           </div>
@@ -1022,29 +1173,48 @@ function refreshNews() {
 function loadOrders() {
   const container = document.getElementById('ordersList');
   if (!container) return;
+
+  // Handle empty orders
+  if (!demoOrdersData || demoOrdersData.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 20px; text-align: center; color: #64748b;">
+        <i class="fas fa-clipboard-list" style="font-size: 24px; opacity: 0.5; margin-bottom: 8px;"></i>
+        <p>No orders yet</p>
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = demoOrdersData.slice(0, 5).map(order => {
-    const isBuy = order.type === 'BUY';
-    const iconInfo = getStockIcon(order.symbol);
+    // Handle different data formats from backend
+    const symbol = order.symbol || order.instrumentSymbol || 'N/A';
+    const type = order.type || order.orderType || 'BUY';
+    const quantity = order.quantity || 0;
+    const price = order.price || order.orderPrice || 0;
+    const date = order.date || order.orderDate || 'N/A';
+
+    const isBuy = type === 'BUY';
+    const iconInfo = getStockIcon(symbol);
 
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
         <div style="display: flex; align-items: center; gap: 12px;">
-          ${renderStockIconHtml(order.symbol, iconInfo, 40)}
+          ${renderStockIconHtml(symbol, iconInfo, 40)}
           <div>
             <div style="font-weight: 600; color: #1e293b;">
-              ${order.type} ${order.symbol}
+              ${type} ${symbol}
             </div>
             <div style="font-size: 11px; color: #64748b;">
-              ${order.quantity} shares @ ${formatCurrency(order.price)}
+              ${quantity} shares @ ${formatCurrency(price)}
             </div>
           </div>
         </div>
         <div style="text-align: right;">
           <div class="gain-indicator ${isBuy ? 'up' : 'down'}" style="font-size: 11px;">
             <i class="fas fa-${isBuy ? 'arrow-up' : 'arrow-down'}"></i>
-            ${order.type}
+            ${type}
           </div>
-          <div style="font-size: 11px; color: #64748b; margin-top: 4px;">${order.date}</div>
+          <div style="font-size: 11px; color: #64748b; margin-top: 4px;">${date}</div>
         </div>
       </div>
     `;
@@ -1055,28 +1225,46 @@ function loadOrders() {
 function loadWatchlist() {
   const container = document.getElementById('watchlistData');
   if (!container) return;
+
+  // Handle empty watchlist
+  if (!demoWatchlistData || demoWatchlistData.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 20px; text-align: center; color: #64748b;">
+        <i class="fas fa-star" style="font-size: 24px; opacity: 0.5; margin-bottom: 8px;"></i>
+        <p>No stocks in watchlist</p>
+      </div>
+    `;
+    return;
+  }
+
   container.innerHTML = demoWatchlistData.map(stock => {
-    const iconInfo = getStockIcon(stock.symbol);
-    const isPositive = stock.changePercent >= 0;
+    // Handle different data formats from backend
+    const symbol = stock.symbol || stock.instrumentSymbol || 'N/A';
+    const name = stock.name || stock.instrumentName || symbol;
+    const price = stock.price || stock.currentPrice || 0;
+    const changePercent = stock.changePercent ?? stock.percentChange ?? 0;
+
+    const iconInfo = getStockIcon(symbol);
+    const isPositive = changePercent >= 0;
 
     return `
       <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
         <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
-          ${renderStockIconHtml(stock.symbol, iconInfo, 40)}
+          ${renderStockIconHtml(symbol, iconInfo, 40)}
           <div style="flex: 1;">
-            <div style="font-weight: 600; color: #1e293b;">${stock.symbol}</div>
-            <div style="font-size: 11px; color: #64748b;">${stock.name}</div>
+            <div style="font-weight: 600; color: #1e293b;">${symbol}</div>
+            <div style="font-size: 11px; color: #64748b;">${name}</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
           <div style="text-align: right;">
-            <div style="font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</div>
+            <div style="font-weight: 600; color: #1e293b;">${formatCurrency(price)}</div>
             <div class="gain-indicator ${isPositive ? 'up' : 'down'}" style="font-size: 11px;">
               <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
-              ${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%
+              ${isPositive ? '+' : ''}${Number(changePercent).toFixed(2)}%
             </div>
           </div>
-          <button onclick="removeFromWatchlist('${stock.symbol}')"
+          <button onclick="removeFromWatchlist('${symbol}')"
                   style="background: rgba(239,68,68,0.1); border: none; color: #ef4444; cursor: pointer; padding: 8px 10px; border-radius: 6px; display: flex; align-items: center; gap: 4px;"
                   title="Remove from watchlist">
             <i class="fas fa-times"></i>
@@ -1894,7 +2082,7 @@ function confirmQuantity() {
   }
 
   if (quantityModalData.action === 'SELL') {
-    const position = demoPortfolioData.find(p => p.tickerSymbol === quantityModalData.symbol);
+    const position = demoPortfolioData.find(p => p.tickerSymbol === symbol);
     if (position && quantity > position.quantity) {
       alert(`❌ You only have ${position.quantity} shares`);
       return;
@@ -2189,7 +2377,7 @@ function showActionFeedback(action, symbol, quantity, price, details, changes) {
               <div style="font-size: 12px; margin-top: 2px;">${formatChange(changes.valueChange)}</div>
             </div>
             <div>
-              <div style="font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">Total Investment</div>
+              <div style="font-size: 11px; color: #64748b; margin-bottom: 4px; text-transform: uppercase, letter-spacing: 0.5px;">Total Investment</div>
               <div style="font-size: 16px, font-weight: 700; color: #1e293b;">${formatCurrency(changes.newTotalInvestment)}</div>
               <div style="font-size: 12px; margin-top: 2px;">${formatChange(changes.investmentChange)}</div>
             </div>
@@ -2390,10 +2578,7 @@ function refreshAllDisplays() {
     totalGainLossEl.textContent = (summary.totalGainLoss >= 0 ? '+' : '') + formatCurrency(summary.totalGainLoss);
     totalGainLossEl.style.color = summary.totalGainLoss >= 0 ? '#10b981' : '#ef4444';
   }
-  if (totalItemsEl) {
-    totalItemsEl.textContent = summary.itemCount;
-    console.log('✅ Updated totalItems:', totalItemsEl.textContent);
-  }
+  if (totalItemsEl) totalItemsEl.textContent = summary.itemCount;
 
   // Update the gain indicator with proper icon classes
   const gainIndicator = document.getElementById('totalGainIndicator');
