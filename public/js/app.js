@@ -268,14 +268,32 @@ let performanceChart = null;
 
 // Demo market data
 const demoMarketData = [
-  { symbol: 'AAPL', name: 'Apple Inc.', price: 178.72, change: 2.35, changePercent: 1.33, volume: '52.3M' },
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 175.45, change: -0.87, changePercent: -0.49, volume: '28.1M' },
-  { symbol: 'MSFT', name: 'Microsoft Corp.', price: 420.10, change: 5.23, changePercent: 1.26, volume: '31.5M' },
-  { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 185.92, change: 1.45, changePercent: 0.79, volume: '45.2M' },
-  { symbol: 'TSLA', name: 'Tesla Inc.', price: 248.50, change: -3.21, changePercent: -1.28, volume: '89.7M' },
-  { symbol: 'NVDA', name: 'NVIDIA Corp.', price: 875.30, change: 15.67, changePercent: 1.82, volume: '67.8M' },
-  { symbol: 'META', name: 'Meta Platforms', price: 485.23, change: 8.92, changePercent: 1.87, volume: '22.4M' },
-  { symbol: 'JPM', name: 'JPMorgan Chase', price: 195.45, change: 1.23, changePercent: 0.63, volume: '15.2M' }
+  { symbol: 'AAPL', name: 'Apple Inc.', price: 178.72, change: 2.35, changePercent: 1.33, volume: '52.3M', sector: 'Technology', marketCap: '2.8T' },
+  { symbol: 'GOOGL', name: 'Alphabet Inc.', price: 175.45, change: -0.87, changePercent: -0.49, volume: '28.1M', sector: 'Technology', marketCap: '2.1T' },
+  { symbol: 'MSFT', name: 'Microsoft Corp.', price: 420.10, change: 5.23, changePercent: 1.26, volume: '31.5M', sector: 'Technology', marketCap: '3.1T' },
+  { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 185.92, change: 1.45, changePercent: 0.79, volume: '45.2M', sector: 'Consumer Discretionary', marketCap: '1.9T' },
+  { symbol: 'TSLA', name: 'Tesla Inc.', price: 248.50, change: -3.21, changePercent: -1.28, volume: '89.7M', sector: 'Consumer Discretionary', marketCap: '790B' },
+  { symbol: 'NVDA', name: 'NVIDIA Corp.', price: 875.30, change: 15.67, changePercent: 1.82, volume: '67.8M', sector: 'Technology', marketCap: '2.2T' },
+  { symbol: 'META', name: 'Meta Platforms', price: 485.23, change: 8.92, changePercent: 1.87, volume: '22.4M', sector: 'Technology', marketCap: '1.2T' },
+  { symbol: 'JPM', name: 'JPMorgan Chase', price: 195.45, change: 1.23, changePercent: 0.63, volume: '15.2M', sector: 'Financials', marketCap: '570B' },
+  { symbol: 'JNJ', name: 'Johnson & Johnson', price: 162.75, change: 0.95, changePercent: 0.59, volume: '12.8M', sector: 'Healthcare', marketCap: '430B' },
+  { symbol: 'V', name: 'Visa Inc.', price: 285.40, change: 3.15, changePercent: 1.12, volume: '8.9M', sector: 'Financials', marketCap: '600B' },
+  { symbol: 'PG', name: 'Procter & Gamble', price: 165.20, change: -0.45, changePercent: -0.27, volume: '6.5M', sector: 'Consumer Staples', marketCap: '390B' },
+  { symbol: 'UNH', name: 'UnitedHealth Group', price: 542.80, change: 4.25, changePercent: 0.79, volume: '3.2M', sector: 'Healthcare', marketCap: '510B' },
+  { symbol: 'HD', name: 'Home Depot Inc.', price: 385.60, change: 2.15, changePercent: 0.56, volume: '4.1M', sector: 'Consumer Discretionary', marketCap: '390B' },
+  { symbol: 'MA', name: 'Mastercard Inc.', price: 475.85, change: 5.70, changePercent: 1.21, volume: '2.8M', sector: 'Financials', marketCap: '450B' },
+  { symbol: 'BAC', name: 'Bank of America', price: 33.25, change: -0.78, changePercent: -2.34, volume: '42.1M', sector: 'Financials', marketCap: '260B' },
+  { symbol: 'WMT', name: 'Walmart Inc.', price: 165.90, change: 0.85, changePercent: 0.51, volume: '8.7M', sector: 'Consumer Staples', marketCap: '540B' },
+  { symbol: 'DIS', name: 'Walt Disney Co.', price: 95.80, change: -2.05, changePercent: -2.12, volume: '18.5M', sector: 'Communication Services', marketCap: '175B' },
+  { symbol: 'NFLX', name: 'Netflix Inc.', price: 485.20, change: 7.30, changePercent: 1.53, volume: '5.2M', sector: 'Communication Services', marketCap: '210B' },
+  { symbol: 'CRM', name: 'Salesforce Inc.', price: 265.45, change: 3.85, changePercent: 1.47, volume: '7.1M', sector: 'Technology', marketCap: '260B' },
+  { symbol: 'ADBE', name: 'Adobe Inc.', price: 575.30, change: 8.45, changePercent: 1.49, volume: '2.9M', sector: 'Technology', marketCap: '265B' },
+  { symbol: 'INTC', name: 'Intel Corp.', price: 45.30, change: -1.32, changePercent: -2.89, volume: '38.2M', sector: 'Technology', marketCap: '185B' },
+  { symbol: 'AMD', name: 'Advanced Micro Devices', price: 180.25, change: 6.85, changePercent: 3.89, volume: '52.1M', sector: 'Technology', marketCap: '290B' },
+  { symbol: 'COIN', name: 'Coinbase Global', price: 285.60, change: 12.45, changePercent: 4.56, volume: '15.3M', sector: 'Financials', marketCap: '75B' },
+  { symbol: 'PLTR', name: 'Palantir Technologies', price: 75.80, change: 2.65, changePercent: 3.56, volume: '89.3M', sector: 'Technology', marketCap: '160B' },
+  { symbol: 'SPY', name: 'SPDR S&P 500 ETF', price: 520.15, change: 4.25, changePercent: 0.82, volume: '85.2M', sector: 'ETF', marketCap: 'N/A' },
+  { symbol: 'QQQ', name: 'Invesco QQQ Trust', price: 425.80, change: 6.15, changePercent: 1.46, volume: '45.8M', sector: 'ETF', marketCap: 'N/A' }
 ];
 
 // Demo portfolio data
@@ -323,39 +341,75 @@ const sectorsTrendingData = [
 const stocksInNewsData = [
   {
     symbol: 'NVDA',
-    name: 'NVIDIA Corp.',
+    name: 'NVIDIA Corporation',
     title: 'NVIDIA shares surge as AI demand continues to exceed expectations',
     source: 'Bloomberg',
     time: '2 hours ago',
     image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=200&fit=crop',
-    sentiment: 'positive'
+    sentiment: 'positive',
+    summary: 'NVIDIA reported Q4 earnings that significantly exceeded Wall Street estimates, with data center revenue jumping 427% year-over-year to $18.4 billion. The company\'s AI chips remain in high demand from tech giants building generative AI capabilities. CEO Jensen Huang highlighted strong momentum in enterprise AI adoption and announced next-generation Blackwell architecture chips.',
+    impact: 'Strong earnings beat and AI growth story continue to drive institutional investment. Price target raised to $950 by multiple analysts.',
+    url: '#'
   },
   {
     symbol: 'AAPL',
     name: 'Apple Inc.',
-    title: 'Apple announces new AI features coming to iPhone next month',
+    title: 'Apple announces breakthrough AI features for iPhone and Mac ecosystem',
     source: 'Reuters',
     time: '3 hours ago',
     image: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&h=200&fit=crop',
-    sentiment: 'positive'
+    sentiment: 'positive',
+    summary: 'Apple unveiled its most advanced AI integration across iPhone, iPad, and Mac devices, featuring enhanced Siri capabilities, real-time language translation, and intelligent photo editing. The new features will be available in iOS 18.4 next month. Apple emphasizes privacy-first AI processing with most computations happening on-device.',
+    impact: 'AI integration could drive iPhone upgrade cycle and strengthen ecosystem lock-in. Services revenue expected to benefit from premium AI features.',
+    url: '#'
   },
   {
     symbol: 'TSLA',
     name: 'Tesla Inc.',
-    title: 'Tesla faces increased competition in EV market, shares dip',
+    title: 'Tesla faces headwinds as EV competition intensifies globally',
     source: 'CNBC',
     time: '4 hours ago',
     image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400&h=200&fit=crop',
-    sentiment: 'negative'
+    sentiment: 'negative',
+    summary: 'Tesla\'s market share in the global EV market continues to decline as traditional automakers and Chinese competitors like BYD gain ground. Q4 delivery numbers fell short of expectations at 484,000 vehicles versus 495,000 estimated. Price cuts have pressured margins while demand growth slows in key markets.',
+    impact: 'Increased competition and margin pressure raise concerns about Tesla\'s premium valuation. Analysts suggest focusing on Full Self-Driving progress for long-term value.',
+    url: '#'
   },
   {
     symbol: 'META',
-    name: 'Meta Platforms',
-    title: 'Meta reports record quarterly revenue, beats estimates',
+    name: 'Meta Platforms Inc.',
+    title: 'Meta reports record quarterly revenue, Reality Labs shows promise',
     source: 'Wall Street Journal',
     time: '5 hours ago',
     image: 'https://images.unsplash.com/photo-1633675254053-d96c7668c3b8?w=400&h=200&fit=crop',
-    sentiment: 'positive'
+    sentiment: 'positive',
+    summary: 'Meta delivered record Q4 revenue of $40.1 billion, up 25% year-over-year, driven by strong advertising growth across Facebook and Instagram. Reality Labs revenue increased 48% to $1.07 billion, showing early monetization of VR/AR investments. Daily active users across all apps reached 3.19 billion.',
+    impact: 'Strong advertising recovery and metaverse progress validate Meta\'s strategy. Improved efficiency measures boost profit margins significantly.',
+    url: '#'
+  },
+  {
+    symbol: 'MSFT',
+    name: 'Microsoft Corporation',
+    title: 'Microsoft Azure AI services drive cloud growth to new heights',
+    source: 'MarketWatch',
+    time: '6 hours ago',
+    image: 'https://images.unsplash.com/photo-1633675254053-d96c7668c3b8?w=400&h=200&fit=crop',
+    sentiment: 'positive',
+    summary: 'Microsoft\'s Intelligent Cloud segment grew 20% to $25.9 billion in Q2, with Azure revenue increasing 30%. The integration of OpenAI\'s GPT models into Azure services has attracted enterprise customers seeking AI solutions. Microsoft 365 Copilot adoption accelerates with over 1.5 million paid subscribers.',
+    impact: 'AI monetization through Azure and productivity tools strengthens Microsoft\'s competitive moat. Cloud leadership position remains intact.',
+    url: '#'
+  },
+  {
+    symbol: 'GOOGL',
+    name: 'Alphabet Inc.',
+    title: 'Google Cloud accelerates as Gemini AI drives enterprise adoption',
+    source: 'TechCrunch',
+    time: '7 hours ago',
+    image: 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=400&h=200&fit=crop',
+    sentiment: 'positive',
+    summary: 'Google Cloud revenue jumped 35% to $9.3 billion as enterprises adopt Gemini AI models for various applications. YouTube advertising revenue rebounded strongly at $9.2 billion. Search revenue remains resilient despite AI integration challenges, growing 13% year-over-year.',
+    impact: 'Cloud momentum and AI integration across products position Google well for long-term growth. Search adaptation to AI era remains key focus.',
+    url: '#'
   }
 ];
 
@@ -715,36 +769,84 @@ function loadStocksInNews() {
     const iconInfo = getStockIcon(news.symbol);
     const sentimentIcon = news.sentiment === 'positive' ? 'fa-thumbs-up' : 'fa-thumbs-down';
     const sentimentColor = news.sentiment === 'positive' ? '#10b981' : '#ef4444';
+    const sentimentBg = news.sentiment === 'positive' ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)';
     const detailId = `news-detail-${idx}`;
     const summary = news.summary || 'This is a brief summary of the news article. In a real integration, this would be replaced by content from your news API or a longer excerpt.';
+    const impact = news.impact || 'Market impact analysis not available.';
     const link = news.url || '#';
 
     return `
-      <div class="news-card">
+      <div class="news-card" style="transition: all 0.3s; cursor: pointer;" onmouseenter="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.1)'" onmouseleave="this.style.transform='translateY(0)'; this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'">
         <div style="background: linear-gradient(135deg, ${iconInfo.bg}, ${iconInfo.color}22); padding: 16px;">
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              ${renderStockIconHtml(news.symbol, iconInfo, 36)}
+            <div style="display: flex; align-items: center; gap: 10px;">
+              ${renderStockIconHtml(news.symbol, iconInfo, 40)}
               <div>
-                <div style="font-weight: 600; color: #1e293b;">${news.symbol}</div>
-                <div style="font-size: 11px; color: #64748b;">${news.name}</div>
+                <div style="font-weight: 700; color: #1e293b; font-size: 15px;">${news.symbol}</div>
+                <div style="font-size: 11px; color: #64748b; font-weight: 500;">${news.name}</div>
               </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <i class="fas ${sentimentIcon}" style="color: ${sentimentColor}; font-size: 14px;"></i>
-              <span style="font-size: 11px; color: #64748b;">${news.time}</span>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="background: ${sentimentBg}; padding: 4px 8px; border-radius: 12px; display: flex; align-items: center; gap: 4px;">
+                <i class="fas ${sentimentIcon}" style="color: ${sentimentColor}; font-size: 12px;"></i>
+                <span style="font-size: 10px; color: ${sentimentColor}; font-weight: 600; text-transform: uppercase;">${news.sentiment}</span>
+              </div>
+              <span style="font-size: 11px; color: #64748b; font-weight: 500;">${news.time}</span>
             </div>
           </div>
-          <h4 style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 8px; line-height: 1.4;">${news.title}</h4>
+
+          <h4 style="font-size: 15px; font-weight: 600; color: #1e293b; margin-bottom: 12px; line-height: 1.4;">${news.title}</h4>
+
+          <!-- Brief preview of the article -->
+          <div style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 8px; margin-bottom: 12px; border-left: 3px solid ${sentimentColor};">
+            <p style="color: #374151; font-size: 12px; line-height: 1.4; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              ${summary.substring(0, 120)}...
+            </p>
+          </div>
+
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-size: 11px; color: #64748b;"><i class="fas fa-newspaper mr-1"></i>${news.source}</span>
-            <button onclick="toggleNews(${idx})" style="background: #3b82f6; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer;">
-              Read More
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 11px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-newspaper"></i>${news.source}
+              </span>
+              <span style="font-size: 11px; color: #64748b; display: flex; align-items: center; gap: 4px;">
+                <i class="fas fa-chart-line"></i>Market Impact
+              </span>
+            </div>
+            <button onclick="toggleNews(${idx})" id="news-btn-${idx}" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+              <i class="fas fa-plus"></i> Details
             </button>
           </div>
-          <div id="${detailId}" style="display:none; margin-top:10px; background:#fff; padding:12px; border-radius:8px;">
-            <p style="color:#374151; font-size:13px; line-height:1.5;">${summary}</p>
-            ${link !== '#' ? `<a href="${link}" target="_blank" style="color:#2563eb; font-size:12px;">Open full article</a>` : ''}
+
+          <div id="${detailId}" style="display:none; margin-top:16px; background:#fff; padding:16px; border-radius:12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <!-- Full Summary -->
+            <div style="margin-bottom: 16px;">
+              <h5 style="color: #1e293b; font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-file-alt" style="color: #3b82f6;"></i>Article Summary
+              </h5>
+              <p style="color:#374151; font-size:13px; line-height:1.5; margin: 0;">${summary}</p>
+            </div>
+
+            <!-- Market Impact Analysis -->
+            <div style="margin-bottom: 16px; padding: 12px; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border-radius: 8px; border-left: 3px solid #0ea5e9;">
+              <h5 style="color: #0c4a6e; font-size: 13px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-chart-line" style="color: #0ea5e9;"></i>Investment Impact
+              </h5>
+              <p style="color: #0c4a6e; font-size: 12px; line-height: 1.4; margin: 0; font-weight: 500;">${impact}</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 8px; align-items: center; justify-content: space-between;">
+              <div style="display: flex; gap: 8px;">
+                <button onclick="addToWatchlist('${news.symbol}')" style="background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: 600;">
+                  <i class="fas fa-star"></i> Watchlist
+                </button>
+                <button onclick="showQuickTrade('${news.symbol}')" style="background: #f59e0b; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer; font-weight: 600;">
+                  <i class="fas fa-shopping-cart"></i> Trade
+                </button>
+              </div>
+              ${link !== '#' ? `<a href="${link}" target="_blank" style="color:#2563eb; font-size:12px; text-decoration: none; font-weight: 600;"><i class="fas fa-external-link-alt"></i> Full Article</a>` : ''}
+            </div>
           </div>
         </div>
       </div>
@@ -754,19 +856,39 @@ function loadStocksInNews() {
 
 function toggleNews(idx) {
   const el = document.getElementById(`news-detail-${idx}`);
-  if (!el) return;
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  const btn = document.getElementById(`news-btn-${idx}`);
+  if (!el || !btn) return;
+
+  const isHidden = el.style.display === 'none' || el.style.display === '';
+  el.style.display = isHidden ? 'block' : 'none';
+  btn.innerHTML = isHidden ? '<i class="fas fa-minus"></i> Collapse' : '<i class="fas fa-plus"></i> Details';
+}
+
+// Quick trade function for news integration
+function showQuickTrade(symbol) {
+  // Find stock data or use symbol
+  const stockData = demoPortfolioData.find(stock => stock.symbol === symbol) || { symbol, name: `${symbol} Inc.`, price: 150 };
+
+  document.getElementById('quantityStockSymbol').textContent = stockData.symbol;
+  document.getElementById('quantityStockName').textContent = stockData.name;
+  document.getElementById('quantityStockPrice').textContent = formatCurrency(stockData.price);
+  document.getElementById('quantityInput').value = 10;
+  updateQuantityTotal();
+  document.getElementById('quantityModal').style.display = 'flex';
 }
 
 function refreshNews() {
-  stocksInNewsData.forEach(news => {
-    const sentimentChange = Math.random() > 0.5 ? 'positive' : 'negative';
-    news.sentiment = sentimentChange;
-    const randomHours = Math.floor(Math.random() * 6) + 1;
-    news.time = `${randomHours} hour${randomHours > 1 ? 's' : ''} ago`;
+  // Simulate real-time news updates
+  stocksInNewsData.forEach((news, idx) => {
+    // Randomly update sentiment and timing
+    if (Math.random() > 0.7) {
+      const timeOptions = ['1 hour ago', '2 hours ago', '3 hours ago', '30 minutes ago', '45 minutes ago'];
+      news.time = timeOptions[Math.floor(Math.random() * timeOptions.length)];
+    }
   });
+
   loadStocksInNews();
-  console.log('✅ News refreshed');
+  showToast('News updated with latest market information', 'success');
 }
 
 // Load Orders
@@ -840,21 +962,33 @@ function loadWatchlist() {
 
 // Watchlist management functions
 function addToWatchlist(symbol, name, price) {
+  // If called from news, get stock data from news or find from existing data
+  if (!name || !price) {
+    const newsStock = stocksInNewsData.find(n => n.symbol === symbol);
+    const portfolioStock = demoPortfolioData.find(s => s.symbol === symbol);
+    const marketStock = demoMarketData.find(s => s.symbol === symbol);
+
+    name = newsStock?.name || portfolioStock?.name || marketStock?.name || `${symbol} Inc.`;
+    price = portfolioStock?.price || marketStock?.price || 150; // Default price if not found
+  }
+
   // Check if already in watchlist
   const exists = demoWatchlistData.find(s => s.symbol === symbol);
   if (exists) {
+    showToast(`${symbol} is already in your watchlist`, 'info');
     return; // Already in watchlist, no action needed
   }
 
   // Add to watchlist
   demoWatchlistData.push({
     symbol: symbol,
-    name: name || symbol,
-    price: price || 0,
-    changePercent: 0
+    name: name,
+    price: price,
+    changePercent: Math.random() * 6 - 3 // Random change for demo
   });
 
   // Visual feedback
+  showToast(`${symbol} added to watchlist successfully`, 'success');
   showWatchlistFeedback('ADDED', symbol, name);
 
   loadWatchlist();
@@ -1015,50 +1149,177 @@ function renderMarketData(data) {
     const watchlistIcon = inWatchlist ? 'fas fa-star' : 'far fa-star';
     const watchlistColor = inWatchlist ? '#f59e0b' : '#94a3b8';
 
+    // Determine sector color
+    const sectorColors = {
+      'Technology': '#3b82f6',
+      'Healthcare': '#10b981',
+      'Financials': '#f59e0b',
+      'Consumer Discretionary': '#8b5cf6',
+      'Consumer Staples': '#06b6d4',
+      'Communication Services': '#ef4444',
+      'ETF': '#64748b'
+    };
+    const sectorColor = sectorColors[stock.sector] || '#64748b';
+
     return `
-      <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #e2e8f0;">
-        <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
-          ${renderStockIconHtml(stock.symbol, iconInfo, 44)}
-          <div style="flex: 1;">
-            <div style="font-weight: 600; color: #1e293b;">${stock.symbol}</div>
-            <div style="font-size: 12px; color: #64748b;">${stock.name}</div>
-          </div>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="text-align: right; min-width: 120px;">
-            <div style="font-weight: 600; color: #1e293b;">${formatCurrency(stock.price)}</div>
-            <div class="price-change ${isPositive ? 'stock-up' : 'stock-down'}" style="font-size: 13px;">
-              <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
-              <span>${isPositive ? '+' : ''}${stock.change.toFixed(2)} (${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%)</span>
+      <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;"
+           onmouseover="this.style.backgroundColor='#f8fafc'"
+           onmouseout="this.style.backgroundColor='transparent'">
+        <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+          ${renderStockIconHtml(stock.symbol, iconInfo, 36)}
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 1px;">
+              <div style="font-weight: 700; color: #1e293b; font-size: 14px;">${stock.symbol}</div>
+              <div style="background: ${sectorColor}; color: white; padding: 1px 4px; border-radius: 3px; font-size: 8px; font-weight: 600; text-transform: uppercase;">
+                ${stock.sector === 'Consumer Discretionary' ? 'CONS' : stock.sector === 'Communication Services' ? 'COMM' : stock.sector.substring(0,4).toUpperCase()}
+              </div>
+            </div>
+            <div style="font-size: 11px; color: #64748b; margin-bottom: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${stock.name}</div>
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 10px; color: #64748b;">
+              <span title="Volume"><i class="fas fa-chart-bar" style="width: 10px;"></i> ${stock.volume}</span>
+              ${stock.marketCap !== 'N/A' ? `<span title="Market Cap"><i class="fas fa-building" style="width: 10px;"></i> ${stock.marketCap}</span>` : ''}
             </div>
           </div>
-          <button onclick="toggleWatchlist('${stock.symbol}', '${stock.name}', ${stock.price})"
-                  style="background: rgba(148,163,184,0.1); border: 1px solid #e2e8f0; cursor: pointer; padding: 8px 10px; border-radius: 6px; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
-                  onmouseover="this.style.background='rgba(245,158,11,0.1)'; this.style.borderColor='${inWatchlist ? '#f59e0b' : '#cbd5e1'}';"
-                  onmouseout="this.style.background='rgba(148,163,184,0.1)'; this.style.borderColor='#e2e8f0';"
-                  title="${inWatchlist ? 'Remove from' : 'Add to'} watchlist">
-            <i class="${watchlistIcon}" style="color: ${watchlistColor}; font-size: 16px;"></i>
-          </button>
-          <button onclick="quickTrade('${stock.symbol}', 'BUY')"
-                  style="background: rgba(16,185,129,0.1); border: none; color: #10b981; cursor: pointer; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;"
-                  title="Quick Buy">
-            <i class="fas fa-cart-plus"></i> Buy
-          </button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="text-align: right; min-width: 110px;">
+            <div style="font-weight: 700; color: #1e293b; font-size: 14px;">${formatCurrency(stock.price)}</div>
+            <div class="price-change ${isPositive ? 'stock-up' : 'stock-down'}" style="font-size: 12px; font-weight: 600;">
+              <i class="fas fa-caret-${isPositive ? 'up' : 'down'}"></i>
+              <span>${isPositive ? '+' : ''}${stock.change.toFixed(2)}</span>
+            </div>
+            <div class="price-change ${isPositive ? 'stock-up' : 'stock-down'}" style="font-size: 10px; font-weight: 500;">
+              ${isPositive ? '+' : ''}${stock.changePercent.toFixed(2)}%
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 4px;">
+            <button onclick="toggleWatchlist('${stock.symbol}', '${stock.name}', ${stock.price})"
+                    style="background: rgba(148,163,184,0.1); border: 1px solid #e2e8f0; cursor: pointer; padding: 6px 8px; border-radius: 6px; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                    onmouseover="this.style.background='rgba(245,158,11,0.1)'; this.style.borderColor='${inWatchlist ? '#f59e0b' : '#cbd5e1'}';"
+                    onmouseout="this.style.background='rgba(148,163,184,0.1)'; this.style.borderColor='#e2e8f0';"
+                    title="${inWatchlist ? 'Remove from' : 'Add to'} watchlist">
+              <i class="${watchlistIcon}" style="color: ${watchlistColor}; font-size: 12px;"></i>
+            </button>
+
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <button onclick="quickTrade('${stock.symbol}', 'BUY')"
+                      style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: white; cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; transition: all 0.2s;"
+                      onmouseover="this.style.transform='scale(1.05)'"
+                      onmouseout="this.style.transform='scale(1)'"
+                      title="Quick Buy">
+                <i class="fas fa-plus" style="font-size: 7px;"></i> BUY
+              </button>
+              <button onclick="quickTrade('${stock.symbol}', 'SELL')"
+                      style="background: linear-gradient(135deg, #ef4444, #dc2626); border: none; color: white; cursor: pointer; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; transition: all 0.2s;"
+                      onmouseover="this.style.transform='scale(1.05)'"
+                      onmouseout="this.style.transform='scale(1)'"
+                      title="Quick Sell">
+                <i class="fas fa-minus" style="font-size: 7px;"></i> SELL
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     `;
   }).join('');
+
+  // Add compact market summary at the top
+  const marketSummary = calculateMarketSummary(data);
+  container.insertAdjacentHTML('afterbegin', `
+    <div style="background: linear-gradient(135deg, #f8fafc, #e1f5fe); padding: 12px; margin-bottom: 12px; border-radius: 8px; border-left: 3px solid #3b82f6;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h4 style="margin: 0; color: #1e293b; font-size: 13px; font-weight: 600;">
+          <i class="fas fa-chart-line" style="color: #3b82f6; margin-right: 6px; font-size: 12px;"></i>Market Overview
+        </h4>
+        <span style="font-size: 10px; color: #64748b; font-weight: 500;">${new Date().toLocaleTimeString()}</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+        <div style="text-align: center; padding: 6px; background: rgba(255,255,255,0.8); border-radius: 6px;">
+          <div style="font-size: 10px; color: #64748b; margin-bottom: 1px;">Stocks</div>
+          <div style="font-weight: 700; color: #1e293b; font-size: 14px;">${marketSummary.totalStocks}</div>
+        </div>
+        <div style="text-align: center; padding: 6px; background: rgba(255,255,255,0.8); border-radius: 6px;">
+          <div style="font-size: 10px; color: #64748b; margin-bottom: 1px;">Gainers</div>
+          <div style="font-weight: 700; color: #10b981; font-size: 14px;">${marketSummary.gainers}</div>
+        </div>
+        <div style="text-align: center; padding: 6px; background: rgba(255,255,255,0.8); border-radius: 6px;">
+          <div style="font-size: 10px; color: #64748b; margin-bottom: 1px;">Losers</div>
+          <div style="font-weight: 700; color: #ef4444; font-size: 14px;">${marketSummary.losers}</div>
+        </div>
+        <div style="text-align: center; padding: 6px; background: rgba(255,255,255,0.8); border-radius: 6px;">
+          <div style="font-size: 10px; color: #64748b; margin-bottom: 1px;">Avg</div>
+          <div style="font-weight: 700; color: ${marketSummary.avgChange >= 0 ? '#10b981' : '#ef4444'}; font-size: 14px;">
+            ${marketSummary.avgChange >= 0 ? '+' : ''}${marketSummary.avgChange.toFixed(1)}%
+          </div>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+// Calculate market summary statistics
+function calculateMarketSummary(data) {
+  const totalStocks = data.length;
+  const gainers = data.filter(stock => stock.changePercent > 0).length;
+  const losers = data.filter(stock => stock.changePercent < 0).length;
+  const avgChange = data.reduce((sum, stock) => sum + stock.changePercent, 0) / totalStocks;
+
+  return { totalStocks, gainers, losers, avgChange };
 }
 
 async function refreshMarketData() {
+  console.log('🔄 Refreshing market data...');
+
   demoMarketData.forEach(stock => {
-    const change = (Math.random() - 0.5) * 2;
-    stock.price = Math.max(0, stock.price + change);
-    stock.change = change;
-    stock.changePercent = (change / stock.price) * 100;
+    // Simulate realistic market movements
+    const volatilityFactor = stock.symbol === 'TSLA' ? 0.03 :
+                           stock.symbol.includes('NVDA') ? 0.025 :
+                           stock.sector === 'Technology' ? 0.02 : 0.015;
+
+    const changePercent = (Math.random() - 0.5) * 2 * volatilityFactor * 100;
+    const newPrice = Math.max(1, stock.price * (1 + changePercent / 100));
+    const actualChange = newPrice - stock.price;
+
+    stock.price = parseFloat(newPrice.toFixed(2));
+    stock.change = parseFloat(actualChange.toFixed(2));
+    stock.changePercent = parseFloat(changePercent.toFixed(2));
+
+    // Simulate volume changes
+    const baseVolume = parseFloat(stock.volume.replace('M', ''));
+    const newVolume = baseVolume * (0.8 + Math.random() * 0.4);
+    stock.volume = newVolume.toFixed(1) + 'M';
   });
+
   renderMarketData(demoMarketData);
+  showToast('Market data updated with latest prices', 'success');
   console.log('✅ Market data refreshed');
+}
+
+// Search function for market data
+function searchMarketData() {
+  const searchTerm = document.getElementById('marketSearch').value.toLowerCase();
+  const filterTerm = document.getElementById('marketFilter').value;
+
+  let filteredData = demoMarketData.filter(stock => {
+    const matchesSearch = searchTerm === '' ||
+                         stock.symbol.toLowerCase().includes(searchTerm) ||
+                         stock.name.toLowerCase().includes(searchTerm);
+
+    const matchesFilter = filterTerm === '' ||
+                         stock.sector.includes(filterTerm) ||
+                         (filterTerm === 'Consumer' && (stock.sector.includes('Consumer')));
+
+    return matchesSearch && matchesFilter;
+  });
+
+  renderMarketData(filteredData);
+}
+
+// Filter function for market data
+function filterMarketData() {
+  searchMarketData(); // Use the search function which handles both search and filter
 }
 
 // Portfolio Table Functions
